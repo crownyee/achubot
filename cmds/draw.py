@@ -16,6 +16,27 @@ emoji_name = split_parts[0]  # 這裡 '_BAU' 是第二個元素
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
 uri = jdata['MongoAPI']
+
+luck_data = {
+    "staff": "友人A,春先のどか,YAGOO",
+    "0th": "ときのそら,ロボ子,星街すいせい,さくらみこ,あずき",
+    "JP_1gen": "白上フブキ,アキ・ローゼンター,夏色まつり,赤井はあと,夜空メル",
+    "JP_2gen": "湊あくあ,紫咲シオン,百鬼あやめ,癒月ちょこ,大空スバル",
+    "JP_Ggen": "大神ミオ,猫又おかゆ,戌神ころね",
+    "JP_3gen": "兎田ぺこら,不知火フレア,白銀ノエル,宝鐘マリン,潤羽るしあ",
+    "JP_4gen": "天音かな,角巻わため,常闇トワ,姫森ルーナ,桐生ココ",
+    "JP_5gen": "雪花ラミィ,桃鈴ねね,獅白ぼたん,尾丸ポルカ,魔乃アロエ",
+    "JP_HoloX": "ラプラス・ダークネス,鷹嶺ルイ,博衣こより,沙花叉クロヱ,風真いろは",
+    "JP_ReGLOSS": "火威青,音乃瀬奏,一条莉々華,儒烏風亭らでん,轟はじめ",
+    "EN_Myth": "Gawr Gura,Watson Amelia,Ninomae Ina'nis,Takanashi Kiara,Mori Calliope",
+    "EN_Promise": "Hakos Baelz,Nanashi Mumei,Ouro Kronii,IRyS,Ceres Fauna,Tsukumo Sana",
+    "EN_Advent": "Fuwawa Abyssgard,Mococo Abyssgard,Nerissa Ravencroft,Koseki Bijou,Shiori Novella",
+    "ID_1gen": "Ayunda Risu,Moona Hoshinova,Airani Iofifteen",
+    "ID_2gen": "Kureiji Ollie,Anya Melfissa,Pavolia Reine",
+    "ID_3gen": "Vestia Zeta,Kaela Kovalskia,Kobo Kanaeru"
+}
+
+
 class draw_lots(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -69,7 +90,7 @@ class draw_lots(Cog_Extension):
                             role = discord.utils.get(guild.roles, id=int(role_id))
                             if role:
                                 await payload.member.remove_roles(role)
-                        #如果找到對應身分組，給用戶添加身分組
+                        #抽籤隨機
                         fortune_list = draw_data.LUCKY_ROLES
                         fortune_roles = draw_data.LUCKY_ROLES_IDS
                         fortune_today = random.choice(fortune_list)
@@ -77,9 +98,31 @@ class draw_lots(Cog_Extension):
                         role = discord.utils.get(guild.roles, id=role_id)
                         await collection.update_one({"_id": payload.user_id},{"$set": {"draw_ID": role_id}})
                         await payload.member.add_roles(role)
+
+                        #DD隨機
+                        group = message.content.split(' ')[1]
+                        if group in luck_data:
+                            members = luck_data[group].split(',')  # 從幸運名單中獲取該團體的成員列表
+                            selected_member = random.choice(members).strip()  # 從成員列表中隨機選擇一個成員
+                            response = selected_member
                         
+                        #隨機數字、顏色
+                        luck_colors = ['紅色', '藍色', '綠色', '黃色', '粉紅色', '橙色', '紫色', '淺藍色', '灰色', '棕色', '黑色', '白色', '金色', '銀色']
+                        selected_colors = random.sample(luck_colors, 1)
+                        luck_number = random.randint(1, 100)
+
                         # 創建運勢提醒訊息
-                        embed = discord.Embed(title=f"今日運勢", colour=0x00b0f4)
+                        embed = discord.Embed(title=f"今日抽籤運勢", colour=0x00b0f4)
+                        embed.add_field(name="今日DD",
+                                        value=response,
+                                        inline=True)
+                        embed.add_field(name="幸運顏色",
+                                        value=selected_colors,
+                                        inline=True)
+                        embed.add_field(name="幸運數字",
+                                        value=luck_number,
+                                        inline=True)
+
                         embed.set_image(url=f"{fortune_today}")
                         await self.channel.send(f"{user.mention}")
                         await self.channel.send(embed=embed)
@@ -89,32 +132,10 @@ class draw_lots(Cog_Extension):
                     print(e)
                     await self.channel.send("資料發生錯誤 請通知<@820697596535635968>") 
 
-
-
-
     @commands.command()
     async def adda(self, ctx, message_id: str):
         message = await ctx.fetch_message(message_id)
         await message.add_reaction(draw_data.rec_emoji)
 
-
 async def setup(bot):
     await bot.add_cog(draw_lots(bot))
-
-
-'''
-                if now == '0000':
-                    for guild in self.bot.guilds:
-                        CLEAN_ROLES = [discord.utils.get(guild.roles, id=int(role_id)) for role_id in draw_data.LUCKY_ROLES_IDS]
-
-                        for member in guild.members:
-                            try:
-                                roles_to_remove = [role for role in member.roles if role in CLEAN_ROLES]
-                                if roles_to_remove:
-                                    await member.remove_roles(*roles_to_remove, reason="每日運勢身分組清除")
-                            except Exception as e:
-                                logging.error(f"Faild for {member.name}: {e}")
-
-                            await asyncio.sleep(0.5)
-
-'''

@@ -13,5 +13,22 @@
     "SMALL_LUCKY_ID": "1209914833902772334",
     "LUCKY_ID": "1209914853662400594",
     "LAST_LUCKY_ID": "1209914871651770438",
-    "BAD_ID": "1209914891801198592"
+    "BAD_ID": "1209914891801198592",
+    "COLOR": "紅色,藍色,綠色,黃色,粉紅色,橙色,紫色,淺藍色,灰色,棕色",
+    "staff": "友人A,春先のどか,YAGOO",
+    "0th": "ときのそら,ロボ子,星街すいせい,さくらみこ,あずき",
+    "JP_1gen": "白上フブキ,アキ・ローゼンター,夏色まつり,赤井はあと,夜空メル",
+    "JP_2gen": "湊あくあ,紫咲シオン,百鬼あやめ,癒月ちょこ,大空スバル",
+    "JP_Ggen": "大神ミオ,猫又おかゆ,戌神ころね",
+    "JP_3gen": "兎田ぺこら,不知火フレア,白銀ノエル,宝鐘マリン,潤羽るしあ",
+    "JP_4gen": "天音かな,角巻わため,常闇トワ,姫森ルーナ,桐生ココ",
+    "JP_5gen": "雪花ラミィ,桃鈴ねね,獅白ぼたん,尾丸ポルカ,魔乃アロエ",
+    "JP_HoloX": "ラプラス・ダークネス,鷹嶺ルイ,博衣こより,沙花叉クロヱ,風真いろは",
+    "JP_ReGLOSS": "火威青,音乃瀬奏,一条莉々華,儒烏風亭らでん,轟はじめ",
+    "EN_Myth": "Gawr Gura,Watson Amelia,Ninomae Ina'nis,Takanashi Kiara,Mori Calliope",
+    "EN_Promise": "Hakos Baelz,Nanashi Mumei,Ouro Kronii,IRyS,Ceres Fauna,Tsukumo Sana",
+    "EN_Advent": "Fuwawa Abyssgard,Mococo Abyssgard,Nerissa Ravencroft,Koseki Bijou,Shiori Novella",
+    "ID_1gen": "Ayunda Risu,Moona Hoshinova,Airani Iofifteen",
+    "ID_2gen": "Kureiji Ollie,Anya Melfissa,Pavolia Reine",
+    "ID_3gen": "Vestia Zeta,Kaela Kovalskia,Kobo Kanaeru"
 }
