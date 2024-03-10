@@ -1,0 +1,5 @@
+__pycache__
+.vscode
+json
+/cmds/__pycache__
+/core/__pycache__
