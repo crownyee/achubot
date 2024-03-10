@@ -1,0 +1,10 @@
+discord.py
+holodex
+google-api-python-client
+typing_extensions
+twspace-dl
+pytz
+pytchat
+emoji
+pymongo[srv]
+motor

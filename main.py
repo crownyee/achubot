@@ -1,0 +1,85 @@
+import sys,os
+import discord
+from discord import app_commands
+from discord.ext import commands
+import json,asyncio
+
+with open('./json/setting.json','r',encoding='utf8') as jfile:
+    jdata = json.load(jfile)
+
+# Discord機器人令牌
+TOKEN = jdata['FTOKEN']
+intents = discord.Intents.all()
+#intents.message_content = True
+#intents.members = True
+#intents.typing = True
+#intents.presences = True
+bot = commands.Bot(command_prefix = ['!','！'], intents=intents)
+ 
+#開機，重啟
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="FUWAMOCO✔️"))
+    await bot.tree.sync()
+    print("Ready")
+#@commands.has_permissions(administrator=True)
+@bot.command() 
+async def frt(ctx):
+    await ctx.send("重啟bot...") 
+    await ctx.message.delete()
+    #重启bot
+    os.execv(sys.executable, ['python'] + sys.argv)
+
+#@commands.has_permissions(administrator=True)
+@bot.command()
+async def fst(ctx):
+    await ctx.send('Shutting down...')
+    await ctx.message.delete()
+    await bot.close()
+
+
+#Load
+async def loadExtensions():
+    folders = [
+        'cmds'
+    ]
+    for folder in folders:
+        for filename in os.listdir(f"./{folder}"):
+            if filename.endswith('.py'):
+                await bot.load_extension(f"{folder}.{filename[:-3]}")
+
+async def main():
+    async with bot:
+        await loadExtensions()
+        await bot.start(TOKEN)
+
+if __name__ == '__main__':
+    asyncio.run(main())
+ 
+
+'''
+#開機，重啟
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="FUWAWA的肚子✔️"))
+    await bot.tree.sync()
+    channel = bot.get_channel(int(jdata['wake_mes']))
+    print("...")
+    await channel.send("我醒了")
+
+#@commands.has_permissions(administrator=True)
+@bot.command() 
+async def frt(ctx):
+    await ctx.send("重啟bot...") 
+    await ctx.message.delete()
+    #重启bot
+    os.execv(sys.executable, ['python'] + sys.argv)
+
+#@commands.has_permissions(administrator=True)
+@bot.command()
+async def fst(ctx):
+    await ctx.send('Shutting down...')
+    await ctx.message.delete()
+    await bot.close()
+
+'''
