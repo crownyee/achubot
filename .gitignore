@@ -1,0 +1,4 @@
+__pycache__
+.vscode
+/cmds/__pycache__
+/core/__pycache__
