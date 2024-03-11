@@ -1,16 +1,8 @@
 import discord
 from discord.ext import commands
-import random,asyncio, json
+import random
+import asyncio
 from core.__init__ import Cog_Extension
-
-import motor.motor_asyncio
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
-uri = jdata['MongoAPI']
 
 class game():     
     # 生成一副牌

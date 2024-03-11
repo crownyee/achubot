@@ -19,8 +19,8 @@ class Cmd_Slash(Cog_Extension):
         await self.bot.tree.sync()
 
     #Slash 
-    @app_commands.command(name = "hello_1", description="測試用")  
-    async def hello_1(self, ita: discord.Interaction):  
+    @app_commands.command(name = "hello", description="測試用")  
+    async def hello(self, ita: discord.Interaction):  
         await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)
     
     #:other_0_blueheart: :4a_pad2: SCHEDULE 11-06 ~ 11-13 :4a_pad2: :other_0_pinkheart:

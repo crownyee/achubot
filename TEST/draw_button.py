@@ -1,5 +1,4 @@
 import discord
-from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 import motor.motor_asyncio
@@ -116,7 +115,7 @@ class draw_button(Cog_Extension):
         if "custom_id" in interaction.data:
             if interaction.data["custom_id"] == "button_respond":
                 await interaction.response.defer()
-                await self.draw_fortune(interaction) 
+                await self.draw_fortune(interaction)
     
 async def setup(bot):
     await bot.add_cog(draw_button(bot))

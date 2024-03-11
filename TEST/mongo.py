@@ -25,7 +25,8 @@ class MyDATA(Cog_Extension):
         super().__init__(*args, **kwargs)
 
         self.mongoConnect = motor.motor_asyncio.AsyncIOMotorClient(uri)
-
+        database = self.mongoConnect['myproject1']
+        self.collection = database['collect1']
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
@@ -33,10 +34,9 @@ class MyDATA(Cog_Extension):
     #簽到
     @app_commands.command(name='daily',description="每日簽到")
     async def daily(self, ita:discord.Interaction):
-        database = self.mongoConnect['myproject1']
-        collection = database['collect1']
+
         try:
-            if await collection.find_one({"_id": ita.user.id}) == None:
+            if await self.collection.find_one({"_id": ita.user.id}) == None:
                 firstData = {
                     "_id": ita.user.id,
                     "user_name": ita.user.display_name,
@@ -47,15 +47,15 @@ class MyDATA(Cog_Extension):
                     "money": 5000
                 }
                 await ita.response.send_message("已新增個人資料")
-                collection.insert_one(firstData) #加入會員
+                self.collection.insert_one(firstData) #加入會員
             
-            userData = await collection.find_one({"_id": ita.user.id}) # Fetch
+            userData = await self.collection.find_one({"_id": ita.user.id}) # Fetch
             if userData['sign_in'] == 1:
                 await ita.response.send_message("今日已簽到")
             else:
                 userData['sign_in'] = 1
                 userData['money'] += 1000
-                await collection.replace_one({"_id": ita.user.id}, userData) #更新
+                await self.collection.replace_one({"_id": ita.user.id}, userData) #更新
                 await ita.response.send_message("簽到成功!")
         except Exception as e:
             print(e)
@@ -64,9 +64,7 @@ class MyDATA(Cog_Extension):
     #顯示個人資訊
     @app_commands.command(name='information', description="個人資訊")
     async def information(self, ita: discord.Interaction):
-        database = self.mongoConnect['myproject1']
-        collection = database['collect1']
-        infodata = await collection.find_one({"_id": ita.user.id})
+        infodata = await self.collection.find_one({"_id": ita.user.id})
         #infodata['user_name'] = ita.user.display_name
         #await collection.replace_one({"_id": ita.user.id}, infodata)
         try:
@@ -105,10 +103,8 @@ class MyDATA(Cog_Extension):
     async def init(self, ita:discord.Interaction):
         await ita.response.defer()
 
-        database = self.mongoConnect['myproject1']
-        collection = database['collect1']
-        await collection.update_many({},{"$set":{"sign_in": 0}})
-        await collection.update_many({},{"$set":{"draw_in": 0}})
+        await self.collection.update_many({},{"$set":{"sign_in": 0}})
+        await self.collection.update_many({},{"$set":{"draw_in": 0}})
 
         await ita.edit_original_response(content=f'成功!')
 async def setup(bot):
