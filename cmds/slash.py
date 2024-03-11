@@ -7,20 +7,22 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
-from core.__draw__ import LUCKY_ROLES_IDS
 
-import asyncio,logging
+import asyncio
 
-class Cmd_Slash(Cog_Extension): 
+class Cmd_Slash(Cog_Extension):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
 
     #Slash 
-    @app_commands.command(name = "hello", description="測試用")  
-    async def hello(self, ita: discord.Interaction):  
+    @app_commands.command(name = "hello_1", description="測試用")  
+    async def hello_1(self, ita: discord.Interaction):  
         await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)
-
+    
     #:other_0_blueheart: :4a_pad2: SCHEDULE 11-06 ~ 11-13 :4a_pad2: :other_0_pinkheart:
     @app_commands.command(name='time_pstdate', description="PST轉CST時間")
     @app_commands.describe(all_pst_time = "範例:11-06 08:00,11-06 18:00")
@@ -93,6 +95,20 @@ async def setup(bot):
 
 '''
 網頁版
+        try:
+            if re.search(r'https?://(?:x\.com|twitter\.com)/i/spaces/\d+', account):
+                replaced_message = re.sub(r'(?:x\.com|twitter\.com)', 'twitter.com',account)
+                command = f"/home/container/.local/bin/twspace_dl -i {replaced_message} -u -s -c {txtfile}"
+                master_url = subprocess.run(command,shell=True,capture_output=True,text=True)
+                await ita.edit_original_response(content=f'```{master_url.stdout}```')
+            else:
+                command = f"/home/container/.local/bin/twspace_dl -U {account} -u -s -c {txtfile}"
+                master_url = subprocess.run(command,shell=True,capture_output=True,text=True)
+                await ita.edit_original_response(content=f'```{master_url.stdout}```')
+        except Exception as e:
+            print(e)
+            await ita.edit_original_response(content=f'URL error 請使用twitter.com的帳號或是space')
+
 class TimeConverter():
     def __init__(self):
         self.pst_offset = timedelta(hours=-8)

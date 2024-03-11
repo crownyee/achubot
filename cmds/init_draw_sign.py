@@ -1,12 +1,9 @@
 import discord
-from discord import app_commands
-from discord.ext import commands
 from core.__init__ import Cog_Extension
 import asyncio, json
 
 import motor.motor_asyncio
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
+
 from datetime import datetime, time
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:

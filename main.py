@@ -6,16 +6,17 @@ import json,asyncio
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
+with open('./json/mydraw.json','r',encoding='utf8') as j:
+    jdraw = json.load(j)
 
 # Discord機器人令牌
-TOKEN = jdata['FTOKEN']
+TOKEN = jdata['RRR']
 intents = discord.Intents.all()
 #intents.message_content = True
 #intents.members = True
 #intents.typing = True
 #intents.presences = True
 bot = commands.Bot(command_prefix = ['!','！'], intents=intents)
- 
 #開機，重啟
 @bot.event
 async def on_ready():
@@ -23,7 +24,7 @@ async def on_ready():
     await bot.tree.sync()
     print("Ready")
 #@commands.has_permissions(administrator=True)
-@bot.command() 
+@bot.command()
 async def frt(ctx):
     await ctx.send("重啟bot...") 
     await ctx.message.delete()

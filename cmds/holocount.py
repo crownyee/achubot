@@ -1,7 +1,7 @@
 import discord
-from discord.ext import commands,tasks
+from discord.ext import commands
 from core.__init__ import Cog_Extension
-import json,asyncio,pytchat
+import json,asyncio
 from holodex.client import HolodexClient
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:

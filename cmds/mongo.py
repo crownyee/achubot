@@ -87,7 +87,7 @@ class MyDATA(Cog_Extension):
 
             draw_role = ita.guild.get_role(infodata['draw_ID'])
             embed.add_field(name="抽籤狀態",
-                            value=draw_role.mention,
+                            value=f"{draw_role.mention}",
                             inline=True)
             
             embed.add_field(name="錢包",
@@ -107,8 +107,8 @@ class MyDATA(Cog_Extension):
 
         database = self.mongoConnect['myproject1']
         collection = database['collect1']
-        await collection.update_many({"_id": ita.user.id},{"$set":{"sign_in": 0}})
-        await collection.update_many({"_id": ita.user.id},{"$set":{"draw_in": 0}})
+        await collection.update_many({},{"$set":{"sign_in": 0}})
+        await collection.update_many({},{"$set":{"draw_in": 0}})
 
         await ita.edit_original_response(content=f'成功!')
 async def setup(bot):
