@@ -1,6 +1,7 @@
 import discord
 import json
 
+from core.__whitelist__ import mywhite
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
@@ -15,11 +16,9 @@ class my_com(Cog_Extension):
 
     #Slash
     @app_commands.command(name='command_add',description='新增指令')
+    @app_commands.check(mywhite.iswhitelist)
     async def command_add(self, ita:discord.Integration, command_name: str, command_content: str):
-        if not ita.user.permissions.administrator:
-            await ita.response.send_message("抱歉，您沒有權限執行此指令。")
-            return
-    
+
         # 讀取現有的命令
         try:
             with open(src, 'r', encoding='utf-8') as f:
@@ -38,11 +37,8 @@ class my_com(Cog_Extension):
 
 
     @app_commands.command(name='command_del',description='刪除指令')
-    async def command_del(self, ita:discord.Integration, command_name:str):
-        if not ita.user.permissions.administrator:
-            await ita.response.send_message("抱歉，您沒有權限執行此指令。")
-            return
-        
+    @app_commands.check(mywhite.iswhitelist)
+    async def command_del(self, ita:discord.Integration, command_name:str):        
         # 讀取現有的命令
         try:
             with open(src, 'r', encoding='utf-8') as f:
@@ -64,11 +60,8 @@ class my_com(Cog_Extension):
 
 
     @app_commands.command(name='command_rep',description='替換指令內容')
-    async def command_rep(self, ita:discord.Integration, command_name:str, new_command_content:str):
-        if not ita.user.permissions.administrator:
-            await ita.response.send_message("抱歉，您沒有權限執行此指令。")
-            return
-    
+    @app_commands.check(mywhite.iswhitelist)
+    async def command_rep(self, ita:discord.Integration, command_name:str, new_command_content:str):    
         # 讀取現有的命令
         try:
             with open(src, 'r', encoding='utf-8') as f:

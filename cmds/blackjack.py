@@ -3,7 +3,6 @@ from discord import app_commands
 from discord.ext import commands
 import random,asyncio, json
 from core.__init__ import Cog_Extension
-import random
 import motor.motor_asyncio
 import core.__draw__ as draw_data
 
@@ -208,6 +207,23 @@ class BJ(Cog_Extension):
     @app_commands.command(name="blackjack",description="21點")
     @app_commands.describe(bat = "下注金額")
     async def blackjack(self, interaction ,bat : int):
+        try:
+            if await self.collection.find_one({"_id": interaction.user.id}) == None:
+                firstData = {
+                    "_id": interaction.user.id,
+                    "user_name": interaction.user.display_name,
+                    "user_photo": str(interaction.user.display_avatar),
+                    "sign_in": 0,
+                    "draw_in": 0,
+                    "draw_ID": "",
+                    "money": 5000
+                }
+                await interaction.response.send_message("首次簽到已新增個人資料")
+                self.collection.insert_one(firstData) #加入會員
+
+        except Exception as e:
+            print(e)
+            await interaction.response.send_message("資料發生錯誤 請通知管理員") 
         #按鈕
         self.bat = bat
         self.time = 0

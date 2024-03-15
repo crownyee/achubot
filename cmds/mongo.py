@@ -3,23 +3,17 @@ from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 import asyncio,json
-from datetime import datetime, time
+from datetime import datetime
 import core.__draw__ as draw_data
+from core.__whitelist__ import mywhite
 
 import motor.motor_asyncio
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-# Create a new client and connect to the server
-#client = MongoClient(uri, server_api=ServerApi('1'))
-# Send a ping to confirm a successful connection
-#database = client['myproject1']
-#collection
-#collection = database['collect1']
-
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 uri = jdata['MongoAPI']
+
+
 class MyDATA(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,6 +24,7 @@ class MyDATA(Cog_Extension):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
+
 
     #簽到
     @app_commands.command(name='daily',description="每日簽到")
@@ -46,7 +41,7 @@ class MyDATA(Cog_Extension):
                     "draw_ID": "",
                     "money": 5000
                 }
-                await ita.response.send_message("已新增個人資料")
+                await ita.response.send_message("首次簽到已新增個人資料")
                 self.collection.insert_one(firstData) #加入會員
             
             userData = await self.collection.find_one({"_id": ita.user.id}) # Fetch
@@ -98,8 +93,8 @@ class MyDATA(Cog_Extension):
             await ita.response.send_message("資料發生錯誤 請通知管理員")
 
     #手動
-    @commands.has_permissions(administrator=True)  # 只允许管理员使用
     @app_commands.command(name='init',description="初始化資料")
+    @app_commands.check(mywhite.iswhitelist)
     async def init(self, ita:discord.Interaction):
         await ita.response.defer()
 
@@ -107,9 +102,18 @@ class MyDATA(Cog_Extension):
         await self.collection.update_many({},{"$set":{"draw_in": 0}})
 
         await ita.edit_original_response(content=f'成功!')
+    
 async def setup(bot):
     await bot.add_cog(MyDATA(bot))
 '''
+# Create a new client and connect to the server
+#client = MongoClient(uri, server_api=ServerApi('1'))
+# Send a ping to confirm a successful connection
+#database = client['myproject1']
+#collection
+#collection = database['collect1']
+
+
 document = {
     'user_id': 1,
     'username': 'ACHU01',

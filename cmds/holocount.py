@@ -59,9 +59,3 @@ class HoloCog(Cog_Extension):
 
 async def setup(bot):
     await bot.add_cog(HoloCog(bot))
-
-
-'''
-    def cog_unload(self):
-        self.holodex_client.close()
-'''

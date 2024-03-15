@@ -8,6 +8,7 @@ import json, asyncio, os, sys
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
+mag_channel = jdata['manage_Channel']
 
 class Event(Cog_Extension):
 
@@ -15,6 +16,16 @@ class Event(Cog_Extension):
     async def on_message(self, msg):
         if msg.author == self.bot.user:
             return
+
+        
+        if "@everyone" in msg.content:
+            self.channel = self.bot.get_channel(int(mag_channel))
+            # 獲取用戶 ID 和顯示名稱
+            user_id = msg.author.id
+            display_name = msg.author.display_name
+            # 打印出警告和用戶資訊
+            warning_msg = f"{display_name} (ID: {user_id}) WARNING"
+            await self.channel.send(warning_msg)
 
         # 讀取命令
         try:

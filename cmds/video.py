@@ -1,8 +1,9 @@
+import json
 import discord
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
-import json, asyncio, os, sys
+from core.__whitelist__ import mywhite
 
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:
@@ -92,6 +93,7 @@ class fmvideo(Cog_Extension):
         await ita.response.send_message(embed=embed)
 
     @app_commands.command(name="fwmc_add", description='新增影片和標題')
+    @app_commands.check(mywhite.iswhitelist)
     async def fwmc_add(self, ita: discord.Interaction, video_id: str, video_name: str):
         #讀取
         try:

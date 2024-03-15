@@ -1,14 +1,16 @@
-import time, json
+import time,random
 from datetime import datetime, timedelta
-import twspace_dl
-import subprocess,re
+import twspace_dl,subprocess,re
 
 import discord
+import asyncio
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 
-import asyncio
+import core.__draw__ as draw_data
+from core.__whitelist__ import mywhite
+
 
 class Cmd_Slash(Cog_Extension):
     def __init__(self, *args, **kwargs):
@@ -19,8 +21,9 @@ class Cmd_Slash(Cog_Extension):
         await self.bot.tree.sync()
 
     #Slash 
-    @app_commands.command(name = "hello", description="測試用")  
-    async def hello(self, ita: discord.Interaction):  
+    @app_commands.command(name = "hello", description="測試用")
+    @app_commands.check(mywhite.iswhitelist)
+    async def hello(self, ita: discord.Interaction):
         await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)
     
     #:other_0_blueheart: :4a_pad2: SCHEDULE 11-06 ~ 11-13 :4a_pad2: :other_0_pinkheart:
@@ -53,6 +56,42 @@ class Cmd_Slash(Cog_Extension):
             print(e)
             await ita.edit_original_response(content=f'URL error 請使用twitter.com的帳號或是space')
 
+    @app_commands.command(name='wife',description="抽老婆")
+    async def wife(self, interaction):
+        wifedata = random.choice(list(draw_data.photo.keys()))
+        wifephoto = draw_data.photo[wifedata]
+
+        embed = discord.Embed(title=f"{wifedata}",
+                            colour=0x00b0f4)
+        embed.set_image(url=f"{wifephoto}")
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="fwhelp",description="說明")
+    async def fwhelp(self, interaction):
+        embed = discord.Embed(title="指令說明",
+                            colour=0x00b0f4)
+
+        embed.add_field(name="/daily",
+                        value="簽到 + 首次註冊",
+                        inline=False)
+        embed.add_field(name="/information",
+                        value="個人資訊",
+                        inline=False)
+        embed.add_field(name="/blackjack",
+                        value="遊戲 21 點(60秒後指令失效)",
+                        inline=False)
+        embed.add_field(name="/wife",
+                        value="抽老婆",
+                        inline=False)
+        embed.add_field(name="/time_pstdate",
+                        value="將PST轉CST(有需要)",
+                        inline=False)
+        embed.add_field(name="/fwmc_info 和 /fwmc_mv ",
+                        value="FUWAMOCO基本資訊 和 MV",
+                        inline=False)
+
+        embed.set_thumbnail(url="https://holodex.net/statics/channelImg/UCt9H_RpQzhxzlyBxFqrdHqA/100.png")
+        await interaction.response.send_message(embed=embed)
 
 #DEF
 class TimeConverter():
