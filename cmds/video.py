@@ -20,6 +20,7 @@ class fmvideo(Cog_Extension):
 
     @app_commands.command(name='fwmc_info', description="雙子資訊")
     async def fwmc_info(self,ita: discord.Interaction):
+        await ita.response.defer()
         embed = discord.Embed(title="FUWAMOCO個人介紹",
                             url="https://www.youtube.com/@FUWAMOCOch",
                             description="關於:\n「魔界看門犬」姊妹中負責掌管一切的角色，因為一次非比尋常的惡作劇惹怒眾神而被關進大監獄「The Cell」中。\n\nFUWAWA介紹:\n她可以冷靜的照顧自己的雙胞胎妹妹「Mococo」和寵物「Pero」。\n但相對地在世人眼中，她也是一個愛說話愛玩，容易引起騷動的人。\n「把你們都弄得毛茸茸的怎麼樣～？」\n\nMOCOCO介紹:\n本來就喜歡玩耍的她，在獄中也是過著玩遊戲看動畫的日子，還時常把姊姊「Fuwawa」和「Pero」牽扯進來。\n有傳言說她參與逃獄只是覺得好玩。\n「遊戲時間到啦！大家都準備好了吧！」",
@@ -49,11 +50,12 @@ class fmvideo(Cog_Extension):
         embed.set_footer(text="FUWAMOCO資訊列",
                         icon_url="https://pbs.twimg.com/profile_images/1684033348086419459/NEAktg4s_400x400.jpg")
 
-        await ita.response.send_message(embed=embed)
+        await ita.edit_original_response(embed=embed)
 
 
     @app_commands.command(name="fwmc_mv", description='雙子單曲和COVER')
     async def fwmc_mv(self,ita: discord.Interaction):
+        await ita.response.defer()
         # 建立YouTube API客戶端
         youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=jdata['YOUTUBE_API_KEY'])
         
@@ -90,11 +92,12 @@ class fmvideo(Cog_Extension):
             except googleapiclient.errors.HttpError as error:
                 await ita.response.send_message("發生HTTP錯誤", error)
         
-        await ita.response.send_message(embed=embed)
+        await ita.edit_original_response(embed=embed)
 
     @app_commands.command(name="fwmc_add", description='新增影片和標題')
     @app_commands.check(mywhite.iswhitelist)
     async def fwmc_add(self, ita: discord.Interaction, video_id: str, video_name: str):
+        await ita.response.defer()
         #讀取
         try:
             with open('./json/description.json','r',encoding='utf8') as dfile:
@@ -114,7 +117,7 @@ class fmvideo(Cog_Extension):
             json.dump(video_list, dfile, indent=4, ensure_ascii=False)
 
         #傳送
-        await ita.response.send_message(f"https://www.youtube.com/watch?v={video_id}")
+        await ita.edit_original_response(content=f"https://www.youtube.com/watch?v={video_id}")
 
 async def setup(bot):
     await bot.add_cog(fmvideo(bot))

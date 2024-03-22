@@ -1,5 +1,5 @@
 import discord
-import re
+import re, random
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
@@ -8,7 +8,6 @@ import json, asyncio, os, sys
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
-mag_channel = jdata['manage_Channel']
 
 class Event(Cog_Extension):
 
@@ -17,29 +16,31 @@ class Event(Cog_Extension):
         if msg.author == self.bot.user:
             return
 
-        
+        # 檢查 @everyone 警告
         if "@everyone" in msg.content:
-            self.channel = self.bot.get_channel(int(mag_channel))
-            # 獲取用戶 ID 和顯示名稱
-            user_id = msg.author.id
-            display_name = msg.author.display_name
-            # 打印出警告和用戶資訊
-            warning_msg = f"{display_name} (ID: {user_id}) WARNING"
-            await self.channel.send(warning_msg)
+            mag_channel = self.bot.get_channel(int(jdata['manage_Channel']))
+            warning_msg = f"{msg.author.display_name} (ID: {msg.author.id}) WARNING"
+            await mag_channel.send(warning_msg)
 
-        # 讀取命令
-        try:
-            with open('./json/commands.json', 'r', encoding='utf-8') as f:
-                command_dict = json.load(f)
-        except FileNotFoundError:
-            command_dict = {}
+        # 檢查 "XXX的機率"
+        elif msg.channel.id == int(jdata['probability_channel']) and re.search(r"的機率$", msg.content):
+            probability = random.randint(0, 100)
+            await msg.channel.send(f"{msg.content}:{probability}%")
 
-        if msg.content.startswith('!'):
+        # 檢查自定義!命令
+        elif msg.content.startswith('!'):
+            try:
+                with open('./json/commands.json', 'r', encoding='utf-8') as f:
+                    command_dict = json.load(f)
+            except FileNotFoundError:
+                command_dict = {}
+
             cmd = msg.content[1:]
             if cmd in command_dict:
                 await msg.channel.send(command_dict[cmd])
-        else:
-            await self.bot.process_commands(msg)# 讓bot能夠繼續處理其他指令
+
+        # 處理其他指令
+        await self.bot.process_commands(msg)
 
 async def setup(bot):
     await bot.add_cog(Event(bot))

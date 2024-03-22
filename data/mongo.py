@@ -2,34 +2,30 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
-import asyncio,json
+import asyncio
 from datetime import datetime
+
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
-
-import motor.motor_asyncio
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
-uri = jdata['MongoAPI']
+from core.__mogo__ import my_mongodb
 
 
 class MyDATA(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.mongoConnect = motor.motor_asyncio.AsyncIOMotorClient(uri)
-        database = self.mongoConnect['myproject1']
-        self.collection = database['collect1']
+
+        self.collection = my_mongodb.collection
+        self.channel = self.bot.get_channel(int(draw_data.DRAW_channel))
+        
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
 
-
     #簽到
     @app_commands.command(name='daily',description="每日簽到")
     async def daily(self, ita:discord.Interaction):
-
+        await ita.response.defer()
         try:
             if await self.collection.find_one({"_id": ita.user.id}) == None:
                 firstData = {
@@ -41,24 +37,25 @@ class MyDATA(Cog_Extension):
                     "draw_ID": "",
                     "money": 5000
                 }
-                await ita.response.send_message("首次簽到已新增個人資料")
+                await ita.edit_original_response(content=f"首次簽到已新增個人資料")
                 self.collection.insert_one(firstData) #加入會員
             
             userData = await self.collection.find_one({"_id": ita.user.id}) # Fetch
             if userData['sign_in'] == 1:
-                await ita.response.send_message("今日已簽到")
+                await ita.edit_original_response(content=f"今日已簽到")
             else:
                 userData['sign_in'] = 1
                 userData['money'] += 1000
                 await self.collection.replace_one({"_id": ita.user.id}, userData) #更新
-                await ita.response.send_message("簽到成功!")
+                await ita.edit_original_response(content=f'簽到成功!')
         except Exception as e:
             print(e)
-            await ita.response.send_message("資料發生錯誤 請通知管理員") 
+            await ita.edit_original_response(content=f"資料發生錯誤 請通知管理員") 
 
     #顯示個人資訊
     @app_commands.command(name='information', description="個人資訊")
     async def information(self, ita: discord.Interaction):
+        await ita.response.defer()
         infodata = await self.collection.find_one({"_id": ita.user.id})
         #infodata['user_name'] = ita.user.display_name
         #await collection.replace_one({"_id": ita.user.id}, infodata)

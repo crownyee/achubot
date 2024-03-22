@@ -1,15 +1,17 @@
 {
-    "SUBCOUNT": 77.8,
+    "SUBCOUNT": 78.4,
     "MTOKEN": "MTE2NzczNDMyMDE4MjYxMjAwOA.Go8_ru.DggotUthfYPLP671ZtQbCYBsq8HHrbk7auKEEY",
     "FTOKEN": "MTE3MjY2NjkzMzc1ODM5ODYyNQ.Go6XAW.pYrosxe95Cc93K6ogqf96c580owLyI4VatrHGU",
     "RRR": "MTEzNTU3ODcwODE0OTgwNTE2OA.Gdfjh1.-EIDNMhAPp0UM9gQu50t5bC54MbeWGKqYc1nck",
-    "MongoAPI": "mongodb+srv://chue0927:0927@achudatabase0.nlm3xek.mongodb.net/?retryWrites=true&w=majority&appName=achudatabase0",
     "YOUTUBE_API_KEY": "AIzaSyB_H2kC6dbWDBov2Acq1bEmRLFMufOmxCw",
     "HOLODEX_API_KEY": "533d4a71-c7e4-4b75-ba49-f0f9c2808ad2",
     "HOLODEX_API_KEY_2": "75cf3c69-8ef8-4360-bcf0-d10dbd9b93dc",
     "FWMC": "UCt9H_RpQzhxzlyBxFqrdHqA",
+    "MongoAPI": "mongodb+srv://chue0927:0927@achudatabase0.nlm3xek.mongodb.net/?retryWrites=true&w=majority&appName=achudatabase0",
     "SUBs_Channel": "1145258862816002178",
+    "Chat_Channel": "1145258862816002178",
     "Test_Channel": "1145258862816002178",
     "manage_Channel": "1145258862816002178",
+    "probability_channel": "1145258862816002178",
     "white_ID": 1003157068028575826
 }

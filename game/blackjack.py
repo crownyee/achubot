@@ -3,13 +3,12 @@ from discord import app_commands
 from discord.ext import commands
 import random,asyncio, json
 from core.__init__ import Cog_Extension
+import random
 import motor.motor_asyncio
 import core.__draw__ as draw_data
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
-
-
 
 uri = jdata['MongoAPI']
 class game():     
@@ -42,7 +41,6 @@ class game():
 class BJ(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.timeout = 5
         self.mongoConnect = motor.motor_asyncio.AsyncIOMotorClient(uri)
         database = self.mongoConnect['myproject1']
         self.collection = database['collect1']
@@ -128,13 +126,14 @@ class BJ(Cog_Extension):
         #13 13 # 15 13
         try:
             while (True):
-                #15 > 13
-                if (self.BJG.calculate_score(self.dealer_hand) > self.BJG.calculate_score(self.player_hand)):
-                    break
-                elif (self.BJG.calculate_score(self.dealer_hand) > 18 and random.random() > 0.8):
+                #12 < 15
+                if (self.BJG.calculate_score(self.dealer_hand) < self.BJG.calculate_score(self.player_hand)):
+                    self.dealer_hand.append(self.deck.pop())
+                elif (self.BJG.calculate_score(self.dealer_hand) == self.BJG.calculate_score(self.player_hand) and self.BJG.calculate_score(self.dealer_hand) < 17):
+                    #16 16
                     self.dealer_hand.append(self.deck.pop())
                 else:
-                    self.dealer_hand.append(self.deck.pop())
+                    break
         except Exception as e:
             print(e)
 
@@ -172,7 +171,7 @@ class BJ(Cog_Extension):
                 self.embed_Stop.add_field(name=f"{self.selected_member}的手牌",
                                 value=f"{self.dealer_hand} \n 點數為: {self.BJG.calculate_score(self.dealer_hand)}",
                                 inline=False)
-                self.embed_Stop.add_field(name=f"{self.selected_member}的手牌",
+                self.embed_Stop.add_field(name=f"結果",
                                 value=f"你輸了 輸了{self.bat} 餘額: {money}",
                                 inline=False)
                 await self.collection.update_one(
@@ -183,7 +182,7 @@ class BJ(Cog_Extension):
                 return
             else:
                 #21 21
-                self.embed_Stop = discord.Embed(title="21點遊戲", color=0xf50000)
+                self.embed_Stop = discord.Embed(title="21點遊戲", color=0x00e4f5)
                 self.embed_Stop.set_thumbnail(url=f"{self.selected_photo}")
                 self.embed_Stop.clear_fields()
                 self.embed_Stop.add_field(name="玩家的手牌",
@@ -192,7 +191,7 @@ class BJ(Cog_Extension):
                 self.embed_Stop.add_field(name=f"{self.selected_member}的手牌",
                                 value=f"{self.dealer_hand} \n 點數為: {self.BJG.calculate_score(self.dealer_hand)}",
                                 inline=False)
-                self.embed_Stop.add_field(name=f"{self.selected_member}的手牌",
+                self.embed_Stop.add_field(name=f"結果",
                                 value=f"平手 餘額: {money}",
                                 inline=False)
                 await self.collection.update_one(
@@ -204,29 +203,11 @@ class BJ(Cog_Extension):
         except Exception as e:
             print(e)
 
-    @app_commands.command(name="blackjack",description="21點")
+    @app_commands.command(name="blackjack",description="21點(60秒後失效)")
     @app_commands.describe(bat = "下注金額")
     async def blackjack(self, interaction ,bat : int):
-        try:
-            if await self.collection.find_one({"_id": interaction.user.id}) == None:
-                firstData = {
-                    "_id": interaction.user.id,
-                    "user_name": interaction.user.display_name,
-                    "user_photo": str(interaction.user.display_avatar),
-                    "sign_in": 0,
-                    "draw_in": 0,
-                    "draw_ID": "",
-                    "money": 5000
-                }
-                await interaction.response.send_message("首次簽到已新增個人資料")
-                self.collection.insert_one(firstData) #加入會員
-
-        except Exception as e:
-            print(e)
-            await interaction.response.send_message("資料發生錯誤 請通知管理員") 
         #按鈕
         self.bat = bat
-        self.time = 0
         button1 = discord.ui.Button(label="要牌", style=discord.ButtonStyle.primary, custom_id="blackjack_gaming")
         button2 = discord.ui.Button(label="雙倍加注", style=discord.ButtonStyle.primary, custom_id="blackjack_double")
         button3 = discord.ui.Button(label="停牌", style=discord.ButtonStyle.red, custom_id="blackjack_stop")
@@ -278,7 +259,7 @@ class BJ(Cog_Extension):
         button3.callback = stop_callback
         
         self.empty_view = discord.ui.View()
-        view = discord.ui.View(timeout=10)
+        view = discord.ui.View(timeout=60)
         view.add_item(button1)
         view.add_item(button2)
         view.add_item(button3)

@@ -1,5 +1,5 @@
 import time,random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,timezone
 import twspace_dl,subprocess,re
 
 import discord
@@ -11,7 +11,6 @@ from core.__init__ import Cog_Extension
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
 
-
 class Cmd_Slash(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,10 +20,13 @@ class Cmd_Slash(Cog_Extension):
         await self.bot.tree.sync()
 
     #Slash 
-    @app_commands.command(name = "hello", description="測試用")
+    @app_commands.command(name = "hello", description="測試用(管理員用)")
     @app_commands.check(mywhite.iswhitelist)
-    async def hello(self, ita: discord.Interaction):
-        await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)
+    async def hello(self, ita: discord.Interaction):  
+        #time_f = datetime.now() - timedelta(hours=16)
+        now = datetime.now().strftime('%H%M')
+        #await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)
+        await ita.response.send_message(f"Hey {now} !",ephemeral=True)
     
     #:other_0_blueheart: :4a_pad2: SCHEDULE 11-06 ~ 11-13 :4a_pad2: :other_0_pinkheart:
     @app_commands.command(name='time_pstdate', description="PST轉CST時間")
@@ -37,6 +39,20 @@ class Cmd_Slash(Cog_Extension):
             f'## <:other_0_blueheart:1165151888984002611> <:4a_pad2:1135430223702278144> SCHEDULE {formatted_dates[0]} ~ {formatted_dates[1]} <:4a_pad2:1135430223702278144> <:other_0_pinkheart:1165151876887629904> \n'
             + "\n".join(formatted_dates[2:]))
     
+    @app_commands.command(name="time_timestamp",description="轉timestamp")
+    @app_commands.describe(time = "範例: 03-20 09:00")
+    async def time_timestamp(self, ita:discord.Interaction,time: str):
+        await ita.response.defer()
+        date_str = f"2024-{time}"
+        try:
+            dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M")
+            utc_dt = dt - timedelta(hours=8)
+            timestamp = int(utc_dt.replace(tzinfo=timezone.utc).timestamp())
+            await ita.edit_original_response(content=f'<t:{timestamp}:F>')
+        except ValueError as e:
+            print(e)
+            await ita.edit_original_response(content=f'時間使用錯誤')
+
     @app_commands.command(name='twitter_live_space', description="抓推特空間m3u8")
     async def twitter_live_space(self,ita: discord.Interaction, account: str):
         await ita.response.defer()

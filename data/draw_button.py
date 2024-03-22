@@ -2,30 +2,21 @@ import discord
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 import motor.motor_asyncio
-import random, asyncio,json
+import random, asyncio
 import core.__draw__ as draw_data
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
-uri = jdata['MongoAPI']
-
-split_parts = draw_data.rec_emoji.strip("<:>").split(":")
-emoji_name = split_parts[0]  # 這裡 '_BAU' 是第二個元素
+from core.__mogo__ import my_mongodb
 
 class draw_button(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.mongoConnect = motor.motor_asyncio.AsyncIOMotorClient(uri)
     async def draw_fortune(self, interaction):
         #基礎資料獲得
         user = interaction.user
         myguild = interaction.guild
         member = interaction.user
-        self.channel = self.bot.get_channel(int(draw_data.DRAW_channel))
-        database = self.mongoConnect['myproject1']
-        collection = database['collect1']
-
+        collection = my_mongodb.collection
+        self.channel
         try:
             if await collection.find_one({"_id": user.id}) == None:
                 firstData = {
@@ -94,7 +85,8 @@ class draw_button(Cog_Extension):
                 await collection.update_one({"_id": user.id}, {"$set": {"draw_in": 1}})
         except Exception as e:
             print(e)
-            await self.channel.send("資料發生錯誤 請通知<@820697596535635968>") 
+            await self.channel.send("資料發生錯誤 請通知<@820697596535635968>")
+             
     @commands.command()
     async def createbutton(self,ctx):
         button = discord.ui.Button(label="抽籤!", style=discord.ButtonStyle.primary, custom_id="button_respond")

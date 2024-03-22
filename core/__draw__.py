@@ -14,7 +14,7 @@ def load_draw_data():
     DRAW_channel = int(jdata["DRAW_Channel"])
     
     split_parts = rec_emoji.strip("<:>").split(":")
-    emoji_name = split_parts[1]  # 這裡我們取得是表情的名稱作為 emoji_name
+    emoji_name = split_parts[0]  # 這裡我們取得是表情的名稱作為 emoji_name
     
     # 抽籤圖片URL
     PERO_draw = jdata['PERO_draw']

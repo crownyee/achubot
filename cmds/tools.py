@@ -5,22 +5,35 @@ from discord.ext import commands
 from core.__init__ import Cog_Extension
 import asyncio
 import subprocess
-from core.__whitelist__ import mywhite
+
 class Mywork(Cog_Extension):
     #指令
     @commands.command()
-    @commands.check(mywhite.iswhitelist)
     async def clean(self, ctx, num: int):
         await ctx.channel.purge(limit=num + 1)
- 
-    @commands.command()
-    @commands.check(mywhite.iswhitelist)
-    async def bau(self, ctx, mes: str = ''):
-        if mes:
-            await ctx.send(f"{mes}")
-        await ctx.send(f"<:0_meba_BAU:1145138276517294211> <:0_meba_BAU:1145138276517294211>")
-        await ctx.message.delete()
 
+    
+    @commands.command()
+    async def bau(self, ctx, *,mes):
+        await asyncio.sleep(0.5)
+        await ctx.message.delete()
+        await ctx.send(mes)
+        
+    @commands.command()
+    async def get_user_info(self,ctx, user_id):
+        # 获取用户对象
+        user = ctx.guild.get_member(int(user_id))
+        if user is not None:
+            # 显示图片
+            avatar_url = str(user.display_avatar)
+            await ctx.send(f"{avatar_url}")
+            
+            # 显示名字
+            display_name = user.display_name
+            await ctx.send(f"{display_name}")
+        else:
+            await ctx.send("AAAAAA")
+            
 async def setup(bot):
     await bot.add_cog(Mywork(bot))
 
