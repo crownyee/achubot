@@ -7,18 +7,105 @@ from emoji import emojize
 
 async def main():
     async with HolodexClient() as client:
-        client = HolodexClient('533d4a71-c7e4-4b75-ba49-f0f9c2808ad2')
-        search = await client.autocomplete("fuwamoco")
+        client = HolodexClient('df1fab08-008b-42cf-8620-4a8776e9dd0d')
+
+        ID = {
+        #JP-staff
+        "友人A":"",
+        "春先のどか":"",
+        "YAGOO":":",
+        #JP-0gen
+        "ときのそら":"",
+        "ロボ子":"",
+        "星街すいせい":"",
+        "さくらみこ":"",
+        "AZKi":"",
+        #JP-1gen
+        "赤井はあと":"",
+        "夜空メル":"",
+        "白上フブキ":"",
+        "アキ・ローゼンター":"",
+        "夏色まつり":"",
+        #JP-Ggen
+        "戌神ころね":"",
+        "大神ミオ":"",
+        "猫又おかゆ":"",
+        #JP-2gen
+        "湊あくあ":"",
+        "癒月ちょこ":"",
+        "百鬼あやめ":"",
+        "大空スバル":"",
+        "紫咲シオン":"",
+        #JP-3gen
+        "兎田ぺこら":"",
+        "宝鐘マリン":"",
+        "白銀ノエル":"",
+        "不知火フレア":"",
+        "潤羽るしあ":"",
+        #JP-4gen
+        "常闇トワ":"",
+        "姫森ルーナ":"",
+        "角巻わため":"",
+        "天音かな":"",
+        "桐生ココ":"",
+        #JP-5gen
+        "桃鈴ねね":"",
+        "雪花ラミィ":"",
+        "尾丸ポルカ":"",
+        "獅白ぼたん":"",
+        "魔乃アロエ":"",
+        #JP-HoloX
+        "博衣こより":"",
+        "ラプラス・ダークネス":"",
+        "沙花叉クロヱ":"",
+        "鷹嶺ルイ":"",
+        "風真いろは":"",
+        #REGLOSS
+        "轟はじめ":"",
+        "儒烏風亭らでん":"",
+        "火威青":"",
+        "一条莉々華":"",
+        "音乃瀬奏":"",
+        #EN-1gen
+        "Takanashi Kiara":"",
+        "Mori Calliope":"",
+        "Ninomae Ina'nis":"",
+        "Gawr Gura":"",
+        "Watson Amelia":"",
+        #EN-2gen
+        "IRyS":"",
+        "Nanashi Mumei":"",
+        "Hakos Baelz":"",
+        "Ouro Kronii":"",
+        "Ceres Fauna":"",
+        "Tsukumo Sana":"",
+        #EN-3gen
+        "Koseki Bijou":"",
+        "Shiori Novella":"",
+        "Nerissa Ravencroft":"",
+        "FuwawaMoco Abyssgard":"",
+        #ID-1gen
+        "Airani Iofifteen":"",
+        "Ayunda Risu":"",
+        "Moona Hoshinova":"",
+        #ID-2gen
+        "Anya Melfissa":"",
+        "Pavolia Reine":"",
+        "Kureiji Ollie":"",
+        #ID-3gen
+        "Kobo Kanaeru":"",
+        "Vestia Zeta":"",
+        "Kaela Kovalskia":"",
+        }
+        search = await client.autocomplete("ときのそら")
         channel_id = search.contents[0].value
-        fwmc_live = await client.live_streams(channel_id=channel_id)
-        fwmc_status = fwmc_live.contents[0].status
-        fwmc_id = fwmc_live.contents[0].id
-        live_time = fwmc_live.contents[0].start_scheduled
-        fwmc_type = fwmc_live.contents[0].type
-        print(fwmc_status)
-        print(fwmc_id)
-        print(live_time)
-        print(fwmc_type)
+        channel =  await client.channel(channel_id=channel_id)
+        print(channel.photo)
+        #print(fwmc_status)
+        #print(fwmc_id)
+        #print(live_time)
+        #print(fwmc_type)
+
     await client.close()
  
 
@@ -27,6 +114,14 @@ asyncio.run(main())
 
 
 '''
+        #search = await client.autocomplete("Sora")
+        channel_id = search.contents[0].value
+        fwmc_live = await client.live_streams(channel_id=channel_id)
+        fwmc_status = fwmc_live.contents[0].status
+        fwmc_id = fwmc_live.contents[0].id
+        live_time = fwmc_live.contents[0].start_scheduled
+        fwmc_type = fwmc_live.contents[0].type
+
         arr = []
         
         holo_channel = await client.live_streams(org='Hololive',lang='all',status='live')

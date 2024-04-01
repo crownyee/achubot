@@ -66,9 +66,10 @@ class FW_Chat(Cog_Extension):
         
     @app_commands.command(name='start_monitor_command', description="抓取直播")
     async def start_monitor_command(self, ita: discord.Interaction, video_id: str):
+        await ita.response.defer()
         self.live_msgs = [asyncio.create_task(self.process_msgs()) for _ in range(5)]
         self.monitor_2 = asyncio.create_task(self.start_monitor(video_id=video_id))
-        await ita.response.send_message(f"開始抓取 [直播](<https://www.youtube.com/watch?v={video_id}>)")
+        await ita.edit_original_response(content=f"開始抓取 [直播](<https://www.youtube.com/watch?v={video_id}>)")
     async def start_monitor(self, video_id):
         chat = pytchat.create(video_id=video_id)
         try:

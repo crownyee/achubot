@@ -19,8 +19,16 @@ class Event(Cog_Extension):
         # 檢查 @everyone 警告
         if "@everyone" in msg.content:
             mag_channel = self.bot.get_channel(int(jdata['manage_Channel']))
-            warning_msg = f"{msg.author.display_name} (ID: {msg.author.id}) WARNING"
-            await mag_channel.send(warning_msg)
+            embed = discord.Embed(title="違規名單",
+                    colour=0x00b0f4)
+            embed.add_field(name=f"",
+                            value=f"{msg.author.mention}\nID:{msg.author.id}",
+                            inline=False)
+            embed.add_field(name=f"內容",
+                            value=f"{msg.content}",
+                            inline=False)
+            #warning_msg = f"{msg.author.display_name} (ID: {msg.author.id}) WARNING"
+            await mag_channel.send(embed=embed)
 
         # 檢查 "XXX的機率"
         elif msg.channel.id == int(jdata['probability_channel']) and re.search(r"的機率$", msg.content):

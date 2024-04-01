@@ -20,9 +20,9 @@ class Cmd_Slash(Cog_Extension):
         await self.bot.tree.sync()
 
     #Slash 
-    @app_commands.command(name = "hello", description="測試用(管理員用)")
+    @app_commands.command(name = "hello_1", description="測試用(管理員用)")
     @app_commands.check(mywhite.iswhitelist)
-    async def hello(self, ita: discord.Interaction):  
+    async def hello_1(self, ita: discord.Interaction):  
         #time_f = datetime.now() - timedelta(hours=16)
         now = datetime.now().strftime('%H%M')
         #await ita.response.send_message(f"Hey {ita.user.mention} !",ephemeral=True)

@@ -55,8 +55,9 @@ class MyDATA(Cog_Extension):
     #顯示個人資訊
     @app_commands.command(name='information', description="個人資訊")
     async def information(self, ita: discord.Interaction):
-        await ita.response.defer()
         infodata = await self.collection.find_one({"_id": ita.user.id})
+        await self.collection.update_one({"_id": ita.user.id}, {"$set": {"user_name":ita.user.display_name}})
+        await self.collection.update_one({"_id": ita.user.id},{"$set": {"user_photo": str(ita.user.display_avatar)}})
         #infodata['user_name'] = ita.user.display_name
         #await collection.replace_one({"_id": ita.user.id}, infodata)
         try:
@@ -77,13 +78,13 @@ class MyDATA(Cog_Extension):
 
             draw_role = ita.guild.get_role(infodata['draw_ID'])
             embed.add_field(name="抽籤狀態",
-                            value=f"{draw_role.mention}",
+                            value=f"draw_role.mention",
                             inline=True)
             
             embed.add_field(name="錢包",
                             value=infodata['money'],
                             inline=True)
-            embed.set_thumbnail(url=f"{infodata['user_photo']}",)
+            embed.set_thumbnail(url=f"{str(ita.user.display_avatar)}")
             await ita.response.send_message(embed=embed,ephemeral=True)
         except Exception as e:
             print(e)

@@ -42,7 +42,8 @@ async def fst(ctx):
 #Load
 async def loadExtensions():
     folders = [
-        'cmds'
+        'cmds',
+        'data'
     ]
     for folder in folders:
         for filename in os.listdir(f"./{folder}"):
