@@ -4,8 +4,9 @@ from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 from core.__whitelist__ import mywhite
+import logging
 
-
+logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
@@ -89,8 +90,9 @@ class fmvideo(Cog_Extension):
                 field_value = f"{video_url}\n總觀看次數: {int(view_count):,.0f} views."
                 embed.add_field(name=video_name, value=field_value, inline=False)
                 
-            except googleapiclient.errors.HttpError as error:
-                await ita.response.send_message("發生HTTP錯誤", error)
+            except googleapiclient.errors.HttpError as e:
+                await ita.response.send_message("發生HTTP錯誤", e)
+                logging.error(f"video.py  fwmc_mv: {e}")
         
         await ita.edit_original_response(embed=embed)
 
@@ -102,9 +104,9 @@ class fmvideo(Cog_Extension):
         try:
             with open('./json/description.json','r',encoding='utf8') as dfile:
                 video_list = json.load(dfile)
-        except FileNotFoundError:
+        except Exception as e:
             video_list = []
-
+            logging.error(f"video.py  fwmc_add: {e}")
         #新增
         new_video_entry = {
             "video_id": video_id,

@@ -23,7 +23,7 @@ class FW_Chat(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.is_streaming = False  #Status
-        self.msg_queue = asyncio.Queue(maxsize=90000)
+        self.msg_queue = asyncio.Queue(maxsize=99999)
         async def holo_chat():
             await self.bot.wait_until_ready()
 

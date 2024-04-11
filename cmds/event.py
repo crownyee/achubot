@@ -3,7 +3,7 @@ import re, random
 from discord import app_commands
 from discord.ext import commands
 from core.__init__ import Cog_Extension
-import json, asyncio, os, sys
+import json, asyncio, os, sys,logging
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)

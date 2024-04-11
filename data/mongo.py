@@ -1,3 +1,5 @@
+import logging
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -9,6 +11,7 @@ import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
 from core.__mogo__ import my_mongodb
 
+logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 
 class MyDATA(Cog_Extension):
     def __init__(self, *args, **kwargs):
@@ -49,7 +52,7 @@ class MyDATA(Cog_Extension):
                 await self.collection.replace_one({"_id": ita.user.id}, userData) #更新
                 await ita.edit_original_response(content=f'簽到成功!')
         except Exception as e:
-            print(e)
+            logging.error(f"mongo.py  daily: {e}")
             await ita.edit_original_response(content=f"資料發生錯誤 請通知管理員") 
 
     #顯示個人資訊
@@ -87,7 +90,7 @@ class MyDATA(Cog_Extension):
             embed.set_thumbnail(url=f"{str(ita.user.display_avatar)}")
             await ita.response.send_message(embed=embed,ephemeral=True)
         except Exception as e:
-            print(e)
+            logging.error(f"mongo.py  information: {e}")
             await ita.response.send_message("資料發生錯誤 請通知管理員")
 
     #手動
@@ -95,11 +98,13 @@ class MyDATA(Cog_Extension):
     @app_commands.check(mywhite.iswhitelist)
     async def init(self, ita:discord.Interaction):
         await ita.response.defer()
+        try:
+            await self.collection.update_many({},{"$set":{"sign_in": 0}})
+            await self.collection.update_many({},{"$set":{"draw_in": 0}})
 
-        await self.collection.update_many({},{"$set":{"sign_in": 0}})
-        await self.collection.update_many({},{"$set":{"draw_in": 0}})
-
-        await ita.edit_original_response(content=f'成功!')
+            await ita.edit_original_response(content=f'成功!')
+        except Exception as e:
+            logging.error(f"mongo.py  init: {e}")
     
 async def setup(bot):
     await bot.add_cog(MyDATA(bot))
