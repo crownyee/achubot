@@ -16,8 +16,8 @@ with open('./json/setting.json', 'r', encoding='utf8') as jfile:
 logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 
 #Setting
-#CHANNELSUBS = jdata['Chat_Channel']
-CHANNELSUBS = jdata['Test_Channel']
+CHANNELSUBS = jdata['Chat_Channel']
+#CHANNELSUBS = jdata['Test_Channel']
 TESTSUBS = jdata['Test_Channel']
 streamer = jdata['FWMC']
 #Class
