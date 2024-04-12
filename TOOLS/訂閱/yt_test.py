@@ -23,6 +23,7 @@ channel_id = 'UCt9H_RpQzhxzlyBxFqrdHqA'
 
 # 获取频道的订阅数量
 subscriber_count = (int(get_channel_subscriber_count(channel_id)) / 10000)
+subs_count = int(subscriber_count) / 10000
 display_count = format(subscriber_count, ".1f")
 print(f'频道的订阅数量：{display_count}')
 numbers = str(display_count).split('.')

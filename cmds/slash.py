@@ -1,13 +1,13 @@
 import time,random
+import asyncio, logging
 from datetime import datetime, timedelta,timezone
 import twspace_dl,subprocess,re
 
 import discord
-import asyncio, logging
 from discord import app_commands
 from discord.ext import commands
-from core.__init__ import Cog_Extension
 
+from core.__init__ import Cog_Extension
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
 
@@ -176,7 +176,7 @@ async def setup(bot):
                 master_url = subprocess.run(command,shell=True,capture_output=True,text=True)
                 await ita.edit_original_response(content=f'```{master_url.stdout}```')
         except Exception as e:
-            print(e)
+            logging.error(f"slash.py twitter_live_space: {e}")
             await ita.edit_original_response(content=f'URL error 請使用twitter.com的帳號或是space')
 
 class TimeConverter():

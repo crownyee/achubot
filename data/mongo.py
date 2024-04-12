@@ -6,7 +6,6 @@ from discord.ext import commands
 from core.__init__ import Cog_Extension
 import asyncio
 from datetime import datetime
-
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
 from core.__mogo__ import my_mongodb
@@ -81,7 +80,7 @@ class MyDATA(Cog_Extension):
 
             draw_role = ita.guild.get_role(infodata['draw_ID'])
             embed.add_field(name="抽籤狀態",
-                            value=f"draw_role.mention",
+                            value=f"{draw_role.mention}",
                             inline=True)
             
             embed.add_field(name="錢包",

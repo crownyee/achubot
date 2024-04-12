@@ -3,9 +3,11 @@ from discord import app_commands
 from discord.ext import commands
 import random,asyncio, json
 from core.__init__ import Cog_Extension
-import random
+import random,logging,datetime
 import motor.motor_asyncio
 import core.__draw__ as draw_data
+
+logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 
 with open('./json/setting.json','r',encoding='utf8') as jfile:
     jdata = json.load(jfile)
@@ -114,7 +116,7 @@ class BJ(Cog_Extension):
                     self.bau = True
                     return
         except Exception as e:
-            print(e)
+            logging.error(f"blackjack.py  BJ_double: {e}")
 
     async def BJ_Stop(self, interaction):
         session = await self.mongoConnect.start_session()
@@ -135,7 +137,7 @@ class BJ(Cog_Extension):
                 else:
                     break
         except Exception as e:
-            print(e)
+            logging.error(f"blackjack.py  BJ_Stop: {e}")
 
         try:
             if self.BJG.calculate_score(self.dealer_hand) > 21 or self.BJG.calculate_score(self.player_hand) > self.BJG.calculate_score(self.dealer_hand):
@@ -201,7 +203,7 @@ class BJ(Cog_Extension):
                 )
                 return
         except Exception as e:
-            print(e)
+            logging.error(f"blackjack.py  BJ_Stop: {e}")
 
     @app_commands.command(name="blackjack",description="21點(60秒後失效)")
     @app_commands.describe(bat = "下注金額")

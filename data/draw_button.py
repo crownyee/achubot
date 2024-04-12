@@ -2,9 +2,11 @@ import discord
 from discord.ext import commands
 from core.__init__ import Cog_Extension
 import motor.motor_asyncio
-import random, asyncio
+import random, asyncio,logging,datetime
 import core.__draw__ as draw_data
 from core.__mogo__ import my_mongodb
+
+logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 
 class draw_button(Cog_Extension):
     def __init__(self, *args, **kwargs):
@@ -16,7 +18,7 @@ class draw_button(Cog_Extension):
         myguild = interaction.guild
         member = interaction.user
         collection = my_mongodb.collection
-        self.channel
+        self.channel = self.bot.get_channel(int(draw_data.DRAW_channel))
         try:
             if await collection.find_one({"_id": user.id}) == None:
                 firstData = {
@@ -30,8 +32,8 @@ class draw_button(Cog_Extension):
                 }
                 collection.insert_one(firstData) #加入會員
         except Exception as e:
-            print(e)
-            await self.channel.send("資料發生錯誤 請通知<@820697596535635968>")
+            logging.error(f"draw_button.py new_member:{e}")
+            await self.channel.send("資料發生錯誤 請通知管理員")
 
         try:
             drawdata =  await collection.find_one({"_id": user.id})
@@ -84,8 +86,8 @@ class draw_button(Cog_Extension):
                 #更新狀態
                 await collection.update_one({"_id": user.id}, {"$set": {"draw_in": 1}})
         except Exception as e:
-            print(e)
-            await self.channel.send("資料發生錯誤 請通知<@820697596535635968>")
+            logging.error(f"draw_button.py draw:{e}")
+            await self.channel.send("資料發生錯誤 請通知管理員")
              
     @commands.command()
     async def createbutton(self,ctx):

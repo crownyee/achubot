@@ -3,7 +3,7 @@ from discord import app_commands
 from core.__init__ import Cog_Extension
 
 import json, datetime, pytz
-import asyncio,pytchat
+import asyncio,pytchat,logging
 from emoji import emojize
 
 from collections import deque
@@ -12,6 +12,8 @@ from holodex.client import HolodexClient
 #Json
 with open('./json/setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
+
+logging.basicConfig(filename='./json/log.txt', level=logging.ERROR)
 
 #Setting
 #CHANNELSUBS = jdata['Chat_Channel']
@@ -47,6 +49,8 @@ class FW_Chat(Cog_Extension):
                     live_time = '2025-01-31T16:00:00.000Z'
                     #print(e)
 
+                    logging.error(f"chat_one.py  holodex_no_stream: {e}")
+
                 #Time轉換
                 utc_time = datetime.datetime.fromisoformat(live_time.replace("Z", "+00:00"))
                 cst_timezone = pytz.timezone('Asia/Shanghai')
@@ -77,6 +81,8 @@ class FW_Chat(Cog_Extension):
                 for c in chat.get().sync_items():
                     await self.msg_queue.put(c)
                 await asyncio.sleep(1)  # 避免 "out of queue" 錯誤
+        except Exception as e:
+            logging.error(f"chat_one.py pytchat: {e}")
 
         finally:
             chat.terminate()
@@ -98,8 +104,9 @@ class FW_Chat(Cog_Extension):
                     try:
                         await self.channel.send(f"{emojize(c.message)}")
                         #await self.channel.send(f"**{c.author.name}**: {emojize(c.message)}")
-                    except Exception as err:
-                        print(f"Error occurred: {err}")
+                    except Exception as e:
+                        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        logging.error(f"{now}-chat_one.py process_msgs: {e}")
             else:
                 await asyncio.sleep(1)
 
