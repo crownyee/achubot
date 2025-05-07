@@ -1,0 +1,40 @@
+[
+    {
+        "server_ID": "1", 
+        "Chat_Channel": "a1",
+        "SUBs_Channel": "a2",
+        "manage_Channel": "a3",
+        "Test_Channel": "a4",
+        "probability_channel": "a5",
+        "message_log": "a6",
+        "DRAW_Channel": "a7",
+        "Reaction_msg": "bb",
+        "Reaction_emoji": "cc",
+        "FWMCLUCKY_ID": "123",
+        "MID_LUCKY_ID": "487",
+        "SMALL_LUCKY_ID": "656",
+        "LUCKY_ID": "565",
+        "LAST_LUCKY_ID": "555",
+        "BAD_ID": "666",
+        "white_ID":0
+    },
+    {
+        "server_ID": "2", 
+        "Chat_Channel": "b1",
+        "SUBs_Channel": "b2",
+        "manage_Channel": "b3",
+        "Test_Channel": "b4",
+        "probability_channel": "b5",
+        "message_log": "b6",
+        "DRAW_Channel": "a7",
+        "Reaction_msg": "bb",
+        "Reaction_emoji": "cc",
+        "FWMCLUCKY_ID": "123",
+        "MID_LUCKY_ID": "487",
+        "SMALL_LUCKY_ID": "656",
+        "LUCKY_ID": "565",
+        "LAST_LUCKY_ID": "555",
+        "BAD_ID": "666",
+        "white_ID":0
+    }
+]

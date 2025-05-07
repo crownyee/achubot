@@ -1,0 +1,68 @@
+[
+    {
+        "PlateNumb": "FAA-065",
+        "OperatorID": "800",
+        "OperatorNo": "0303",
+        "RouteUID": "TPE10962",
+        "RouteID": "10962",
+        "RouteName": {
+            "Zh_tw": "262區",
+            "En": "262Shuttle"
+        },
+        "SubRouteUID": "TPE108570",
+        "SubRouteID": "108570",
+        "SubRouteName": {
+            "Zh_tw": "262區",
+            "En": "262Shuttle"
+        },
+        "Direction": 0,
+        "StopUID": "TPE40661",
+        "StopID": "40661",
+        "StopName": {
+            "Zh_tw": "正興里",
+            "En": "Zhengxing Li"
+        },
+        "StopSequence": 16,
+        "DutyStatus": 1,
+        "BusStatus": 0,
+        "A2EventType": 1,
+        "GPSTime": "2024-08-10T10:28:51+08:00",
+        "TripStartTimeType": 0,
+        "TripStartTime": "10:07:58",
+        "SrcUpdateTime": "2024-08-10T10:29:00+08:00",
+        "UpdateTime": "2024-08-10T10:29:04+08:00"
+    },
+    {
+        "PlateNumb": "783-U8",
+        "OperatorID": "4",
+        "OperatorNo": "0504",
+        "RouteUID": "TXG6881",
+        "RouteID": "6881",
+        "RouteName": {
+            "Zh_tw": "688副",
+            "En": "688V"
+        },
+        "SubRouteUID": "TXG6881",
+        "SubRouteID": "6881",
+        "SubRouteName": {
+            "Zh_tw": "688副",
+            "En": "688V"
+        },
+        "Direction": 0,
+        "StopUID": "TXG19057",
+        "StopID": "19057",
+        "StopName": {
+            "Zh_tw": "9號風車",
+            "En": "NO.9 Wind Turbine"
+        },
+        "StopSequence": 23,
+        "DutyStatus": 0,
+        "BusStatus": 0,
+        "A2EventType": 0,
+        "GPSTime": "2024-08-10T10:24:47+08:00",
+        "TripStartTimeType": 0,
+        "TripStartTime": "10:00:51",
+        "SrcUpdateTime": "2024-08-10T10:28:39+08:00",
+        "UpdateTime": "2024-08-10T10:29:09+08:00"
+    }
+]

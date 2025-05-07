@@ -1,0 +1,22 @@
+{
+    "SUBCOUNT": 0,
+    "MTOKEN": "",
+    "FTOKEN": "",
+    "MongoAPI": "",
+    "YOUTUBE_API_KEY": "",
+    "HOLODEX_API_KEY": "",
+    "FWMC": "",
+    "Chat_Channel": "",
+    "SUBs_Channel": "",
+    "manage_Channel": "",
+    "Test_Channel": "",
+    "probability_channel": "",
+    "message_log": "",
+    "BOT_ID": "",
+    "rec_love1": "",
+    "rec_love2": "",
+    "white_ID": 0,
+    "url_1": "https://tdx.transportdata.tw/api/basic/v2/Bus/RealTimeNearStop/City/Taipei?$filter=PlateNumb%20eq%20%27FAA-065%27&$format=JSON",
+    "url_2": "https://tdx.transportdata.tw/api/basic/v2/Bus/RealTimeNearStop/City/Taichung?$filter=PlateNumb%20eq%20%27783-U8%27&$format=JSON",
+    "url_3": "https://tdx.transportdata.tw/api/basic/v2/Bus/RealTimeNearStop/City/Kaohsiung?$filter=PlateNumb%20eq%20%27KKA-9137%27&$format=JSON"
+}

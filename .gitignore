@@ -1,0 +1,7 @@
+__pycache__
+.vscode/
+json/
+TOOLS/
+TEST/
+.holodex-master/
+bus_data/bus_d.py
