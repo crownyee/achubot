@@ -1,10 +1,16 @@
+#Discord
 import discord
 from discord.ext import commands
+
+#Core
 from core.__init__ import Cog_Extension
-import motor.motor_asyncio
-import random, asyncio,logging,datetime
 import core.__draw__ as draw_data
 from core.__mogo__ import my_mongodb
+
+#Tools
+import motor.motor_asyncio
+import random, asyncio,logging,datetime
+
 
 logging.basicConfig(filename='./json/error_log.txt', level=logging.ERROR)
 
@@ -59,7 +65,7 @@ class draw_button(Cog_Extension):
                 role = discord.utils.get(myguild.roles, id=role_id)
                 await collection.update_one({"_id": user.id},{"$set": {"draw_ID": role_id}})
                 await member.add_roles(role)
-                base = discord.utils.get(myguild.roles, id=1218060367263961109)
+                base = discord.utils.get(myguild.roles, id=draw_data.BASE_ID)
                 await member.add_roles(base)
                 #DD隨機
                 group = random.choice(list(draw_data.luck_data.keys()))

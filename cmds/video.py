@@ -1,16 +1,22 @@
-import json,asyncio
+#Discord
 import discord,datetime
 from discord import app_commands
 from discord.ext import commands
+
+#Core
 from core.__init__ import Cog_Extension
 from core.__whitelist__ import mywhite
+from core import __json__
+#Tools
+import json,asyncio
 import logging
+
+#Google Youtube
 import googleapiclient.discovery
 import googleapiclient.errors
-
+ 
 logging.basicConfig(filename='./json/error_log.txt', level=logging.ERROR)
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
+
 
 
 class fmvideo(Cog_Extension):
@@ -23,6 +29,8 @@ class fmvideo(Cog_Extension):
     @app_commands.command(name='fwmc_info', description="雙子資訊")
     async def fwmc_info(self,ita: discord.Interaction):
         await ita.response.defer()
+        
+
         embed = discord.Embed(title="FUWAMOCO個人介紹",
                             url="https://www.youtube.com/@FUWAMOCOch",
                             description="關於:\n「魔界看門犬」姊妹中負責掌管一切的角色，因為一次非比尋常的惡作劇惹怒眾神而被關進大監獄「The Cell」中。\n\nFUWAWA介紹:\n她可以冷靜的照顧自己的雙胞胎妹妹「Mococo」和寵物「Pero」。\n但相對地在世人眼中，她也是一個愛說話愛玩，容易引起騷動的人。\n「把你們都弄得毛茸茸的怎麼樣～？」\n\nMOCOCO介紹:\n本來就喜歡玩耍的她，在獄中也是過著玩遊戲看動畫的日子，還時常把姊姊「Fuwawa」和「Pero」牽扯進來。\n有傳言說她參與逃獄只是覺得好玩。\n「遊戲時間到啦！大家都準備好了吧！」",
@@ -52,7 +60,7 @@ class fmvideo(Cog_Extension):
         embed.set_footer(text="FUWAMOCO資訊列",
                         icon_url="https://pbs.twimg.com/profile_images/1684033348086419459/NEAktg4s_400x400.jpg")
 
-        await ita.edit_original_response(embed=embed)
+        await ita.followup.send(embed=embed)
 
 
     async def update_embed(self,ita: discord.Interaction, embed: discord.Embed, video_list: list, youtube):
@@ -101,7 +109,6 @@ class fmvideo(Cog_Extension):
                     await self.update_embed(ita, embed, video_list, youtube)
 
                     
-
                 except asyncio.TimeoutError:
                     await message.delete()
                     self.page_number = 0
@@ -113,6 +120,7 @@ class fmvideo(Cog_Extension):
         await ita.response.defer()
         
         # 建立YouTube API客戶端
+        jdata = __json__.get_setting_data()
         youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=jdata['YOUTUBE_API_KEY'])
         
         embed = discord.Embed(title="FUWAMOCO mv cover 統計", colour=0x00b0f4)
@@ -121,12 +129,7 @@ class fmvideo(Cog_Extension):
                         icon_url="https://yt3.googleusercontent.com/zt63obGOD6fnCX0elnzt8xkylqOTnAENmSCKmwg_PSiC857DDgB28kEjQ-FJlWGtNYZ9lqzEag=s176-c-k-c0x00ffffff-no-rj")
 
         # 讀取資料
-        try:
-            with open('./json/description.json', 'r', encoding='utf8') as dfile:
-                video_list = json.load(dfile)
-        except FileNotFoundError:
-            video_list = []
-
+        video_list = __json__.get_descriptions_data()
         await self.update_embed(ita, embed, video_list, youtube)
 
 
@@ -134,27 +137,23 @@ class fmvideo(Cog_Extension):
     @app_commands.command(name="fwmc_add", description='新增影片和標題(admin only)')
     @app_commands.check(mywhite.iswhitelist)
     async def fwmc_add(self, ita: discord.Interaction, video_id: str, video_name: str):
-        await ita.response.defer()
-        #讀取
         try:
-            with open('./json/description.json','r',encoding='utf8') as dfile:
-                video_list = json.load(dfile)
+            await ita.response.defer()
+            #讀取
+            video_list = __json__.get_descriptions_data()
+            #新增
+            new_video_entry = {
+                "video_id": video_id,
+                "video_name": video_name
+            }
+            video_list.append(new_video_entry)
+            #寫回
+            __json__.set_descriptions_data(video_list)
+            #傳送
+            await ita.followup.send(content=f"https://www.youtube.com/watch?v={video_id}")
         except Exception as e:
-            video_list = []
-            logging.error(f"video.py  fwmc_add: {e}")
-        #新增
-        new_video_entry = {
-            "video_id": video_id,
-            "video_name": video_name
-        }
-        video_list.append(new_video_entry)
-
-        #寫回
-        with open('./json/description.json','w',encoding='utf8') as dfile:
-            json.dump(video_list, dfile, indent=4, ensure_ascii=False)
-
-        #傳送
-        await ita.edit_original_response(content=f"https://www.youtube.com/watch?v={video_id}")
+            logging.error(f"fwmc_add {e}")
+            await ita.followup.send(f"fwmc_add error : {e}")
 
 async def setup(bot):
     await bot.add_cog(fmvideo(bot))

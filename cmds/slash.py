@@ -1,12 +1,16 @@
-import time,random
-import asyncio, logging
-from datetime import datetime, timedelta,timezone
-import twspace_dl,subprocess,re
-
+#Discord
 import discord
 from discord import app_commands
 from discord.ext import commands
 
+#Tools
+import time,random
+import asyncio, logging
+from datetime import datetime, timedelta,timezone
+import twspace_dl,subprocess,re
+import os
+
+#Core
 from core.__init__ import Cog_Extension
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
@@ -23,14 +27,36 @@ class Cmd_Slash(Cog_Extension):
 
     #Slash 
     @app_commands.command(name = "hello", description="測試用(admin only)")
-    @app_commands.check(mywhite.iswhitelist) 
+    @app_commands.check(mywhite.iswhitelist)
     async def hello(self, ita: discord.Interaction):
         try:
-            #   = datetime.now() - timedelta(hours=16)
+            time_f  = datetime.now() - timedelta(hours=12)
             now = datetime.now().strftime('%H%M')
             await ita.response.send_message(f"Hey {now} !",ephemeral=True)
         except Exception as e:
             logging.error(f"slash.py  hello_1: {e}")
+
+    @app_commands.command(name="save_user_msgs", description="存某使用者在某頻道的所有訊息")
+    @app_commands.describe(channel="目標頻道", user="目標使用者")
+    @commands.has_permissions(administrator=True)
+    async def save_user_msgs(self, interaction: discord.Interaction, channel: discord.TextChannel, user: discord.User):
+        await interaction.response.defer(ephemeral=True)
+        filename = f"{channel.id}_{user.id}.txt"
+        msgs = []
+        async for msg in channel.history(limit=None):
+            if msg.author.id == user.id:
+                # 只存文字內容，可自行加上時間、附件等
+                msgs.append(f"{msg.content}")
+
+        if not msgs:
+            await interaction.followup.send("沒有找到訊息。")
+            return
+
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write("\n".join(msgs))
+
+        await interaction.followup.send(file=discord.File(filename))
+        os.remove(filename)
 
     #:other_0_blueheart: :4a_pad2: SCHEDULE 11-06 ~ 11-13 :4a_pad2: :other_0_pinkheart:
     @app_commands.command(name='time_pstdate', description="PST轉CST時間")
@@ -46,19 +72,19 @@ class Cmd_Slash(Cog_Extension):
         except Exception as e:
             logging.error(f"slash.py  time_pstdate: {e}")
             
-    @app_commands.command(name="time_timestamp",description="轉timestamp")
+    @app_commands.command(name="time_timestamp",description="台北時間轉timestamp")
     @app_commands.describe(time = "範例: 03-20 09:00")
     async def time_timestamp(self, ita:discord.Interaction,time: str):
+        date_str = f"2026-{time}"
         await ita.response.defer()
-        date_str = f"2024-{time}"
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M")
             utc_dt = dt - timedelta(hours=8)
             timestamp = int(utc_dt.replace(tzinfo=timezone.utc).timestamp())
-            await ita.edit_original_response(content=f'<t:{timestamp}:F>')
+            await ita.followup.send(f'<t:{timestamp}:F>')
         except ValueError as e:
             logging.error(f"slash.py time_timestamp: {e}")
-            await ita.edit_original_response(content=f'時間使用錯誤')
+            await ita.followup.send(f'時間使用錯誤 {e}')
 
     @app_commands.command(name='twitter_live_space', description="抓推特空間m3u8")
     async def twitter_live_space(self,ita: discord.Interaction, space_link: str):
@@ -70,14 +96,14 @@ class Cmd_Slash(Cog_Extension):
                 replaced_message = re.sub(r'(?:x\.com|twitter\.com)', 'x.com',space_link)
                 command = f"twspace_dl -i {replaced_message} -u -s -c {txtfile}"
                 master_url = subprocess.run(command,shell=True,capture_output=True,text=True)
-                await ita.edit_original_response(content=f'```{master_url.stdout}```')
+                await ita.followup.send(f'```{master_url.stdout}```')
             else:
                 command = f"twspace_dl -U {space_link} -u -s -c {txtfile}"
                 master_url = subprocess.run(command,shell=True,capture_output=True,text=True)
-                await ita.edit_original_response(content=f'```{master_url.stdout}```')
+                await ita.followup.send(f'```{master_url.stdout}```')
         except Exception as e:
             logging.error(f"slash.py twitter_live_space: {e}")
-            await ita.edit_original_response(content=f'URL error 請使用twitter.com的帳號或是space')
+            await ita.followup.send(f'URL error 請使用twitter.com的帳號或是space error {e}')
 
     @app_commands.command(name='wife',description="抽老婆")
     async def wife(self, interaction):
@@ -89,14 +115,15 @@ class Cmd_Slash(Cog_Extension):
             embed = discord.Embed(title=f"{wifedata}",
                                 colour=0x00b0f4)
             embed.set_image(url=f"{wifephoto}")
-            await interaction.edit_original_response(embed=embed)
+            await interaction.followup.send(embed=embed)
         except Exception as e:
-            logging.error(f"slash.py wife {e}")
-            await interaction.edit_original_response(content=f'執行時BOT出現錯誤!')
+            logging.error(f"wife {e}")
+            await interaction.followup.send(f'wife command error {e}')
 
     @app_commands.command(name="fwhelp",description="說明")
     async def fwhelp(self, interaction):
         try:
+            await interaction.response.defer()
             embed = discord.Embed(title="指令說明",
                                 colour=0x00b0f4)
 
@@ -119,16 +146,16 @@ class Cmd_Slash(Cog_Extension):
                             value="FUWAMOCO基本資訊 和 MV",
                             inline=False)
 
-            embed.set_thumbnail(url="https://holodex.net/statics/channelImg/UCt9H_RpQzhxzlyBxFqrdHqA/100.png")
-            await interaction.response.send_message(embed=embed)
+            embed.set_thumbnail(url="https://holodex.net/statics/channelImg/UCt9H_RpQzhxzlyBxFqrdHqA.png")
+            await interaction.followup.send(embed=embed)
         except Exception as e:
             logging.error(f"slash.py fwhelp {e}")
-            await interaction.edit_original_response(content=f'執行BOT時出現錯誤!')
+            await interaction.followup.send(f'help error {e}')
 #DEF
 class TimeConverter():
     def __init__(self):
-        self.pst_offset = timedelta(hours=-8)
-        self.tpi_offset = timedelta(hours=+7)
+        self.pst_offset = timedelta(hours=-7)
+        self.tpi_offset = timedelta(hours=+8)
 
     def pst_to_cst(self, pst_time):
         pst_datetime = datetime.strptime(pst_time, "%m-%d %H:%M")
@@ -142,7 +169,7 @@ class TimeConverter():
         for pst_time in pst_times:
             time = self.pst_to_cst(pst_time)
             temp_time.append(time)
-        tpi_times = ['2024-' + date for date in temp_time]
+        tpi_times = ['2026-' + date for date in temp_time]
         final_stamp = []
         for tpi_time in tpi_times:
             struct_time = datetime.strptime(tpi_time, "%Y-%m-%d %H:%M")
@@ -156,7 +183,7 @@ class TimeConverter():
         formatted_dates.insert(0, earliest_date)
         formatted_dates.insert(1, latest_date)
 
-        return formatted_dates
+        return formatted_dates 
 
 
 async def setup(bot):

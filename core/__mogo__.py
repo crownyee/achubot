@@ -1,8 +1,7 @@
 import motor.motor_asyncio
-import json
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
+from core import __json__
+jdata = __json__.get_setting_data()
+ 
 uri = jdata['MongoAPI']
 
 class MyMongoDB:

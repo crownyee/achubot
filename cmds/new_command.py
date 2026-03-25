@@ -1,13 +1,14 @@
+#Discord
 import discord
-import json
-
-from core.__whitelist__ import mywhite
 from discord import app_commands
 from discord.ext import commands
+#Core
+from core.__whitelist__ import mywhite
 from core.__init__ import Cog_Extension
-import asyncio
+from core import __json__
+#Tools
+import asyncio,logging
 
-src = './json/commands.json'
 
 class my_com(Cog_Extension):
     @commands.Cog.listener()
@@ -17,88 +18,77 @@ class my_com(Cog_Extension):
     #Slash
     @app_commands.command(name='command_add',description='新增指令(admin only)')
     @app_commands.check(mywhite.iswhitelist)
-    async def command_add(self, ita:discord.Integration, command_name: str, command_content: str):
-
-        # 讀取現有的命令
+    async def command_add(self, ita:discord.Interaction, command_name: str, command_content: str):
         try:
-            with open(src, 'r', encoding='utf-8') as f:
-                command_dict = json.load(f)
-        except FileNotFoundError:
-            command_dict = {}
+            await ita.response.defer()
+            # 讀取現有的命令
+            command_dict = __json__.get_commands_data()
+            # 添加新命令
+            command_dict[command_name] = command_content
+            # 將修改後的命令字典寫回json檔中
+            __json__.set_commands_data(command_dict)
 
-        # 添加新命令
-        command_dict[command_name] = command_content
-
-        # 將修改後的命令字典寫回json檔中
-        with open(src, 'w', encoding='utf-8') as f:
-            json.dump(command_dict, f,ensure_ascii=False, indent=4)
-
-        await ita.response.send_message(f'Command "{command_name}" added with content: `{command_content}`')
-
+            await ita.followup.send(f'指令已成功加入 "!{command_name}" 內容: `{command_content}`')
+        except Exception as e:
+            await ita.followup.send(f'指令加入錯誤 "{e}')
+            logging.error(f"command_add.py  hello_1: {e}")
 
     @app_commands.command(name='command_del',description='刪除指令(admin only)')
     @app_commands.check(mywhite.iswhitelist)
-    async def command_del(self, ita:discord.Integration, command_name:str):        
-        # 讀取現有的命令
+    async def command_del(self, ita:discord.Integration, command_name:str): 
         try:
-            with open(src, 'r', encoding='utf-8') as f:
-                command_dict = json.load(f)
-        except FileNotFoundError:
-            command_dict = {}
-            
-        # 刪除指定的命令
-        if command_name in command_dict:
-            del command_dict[command_name]
-            
-            # 將修改後的命令字典寫回json檔案
-            with open(src, 'w', encoding='utf-8') as f:
-                json.dump(command_dict, f,ensure_ascii=False, indent=4)
-                
-            await ita.response.send_message(f'Command "{command_name}" removed.')
-        else:
-            await ita.response.send_message(f'Command "{command_name}" does not exist.')
-
+            await ita.response.defer()
+            # 讀取現有的命令
+            command_dict = __json__.get_commands_data()
+            # 刪除指定的命令
+            if command_name in command_dict:
+                del command_dict[command_name]
+                # 將修改後的命令字典寫回json檔案
+                __json__.set_commands_data(command_dict)
+                await ita.followup.send(f'指令 "!{command_name}" 已刪除')
+            else:
+                await ita.followup.send(f'指令 "{command_name}" 刪除失敗')
+        except Exception as e:
+            await ita.response.send_message(f'指令刪除錯誤 "{e}')
+            logging.error(f"command_del {e}")
 
     @app_commands.command(name='command_rep',description='替換指令內容(admin only)')
     @app_commands.check(mywhite.iswhitelist)
-    async def command_rep(self, ita:discord.Integration, command_name:str, new_command_content:str):    
-        # 讀取現有的命令
-        try:
-            with open(src, 'r', encoding='utf-8') as f:
-                command_dict = json.load(f)
-        except FileNotFoundError:
-            command_dict = {}
-            
-        # 替換指定的命令內容
-        if command_name in command_dict:
-            command_dict[command_name] = new_command_content
-            
-            # 將修改後的命令字典寫回json檔案
-            with open(src, 'w', encoding='utf-8') as f:
-                json.dump(command_dict, f,ensure_ascii=False, indent=4)
+    async def command_rep(self, ita:discord.Integration, command_name:str, new_command_content:str):
+        try:   
+            # 讀取現有的命令
+            command_dict = __json__.get_commands_data()
                 
-            await ita.response.send_message(f'Command "{command_name}" replaced with content: "`{new_command_content}`"')
-        else:
-            await ita.response.send_message(f'Command "{command_name}" does not exist.')
+            # 替換指定的命令內容
+            if command_name in command_dict:
+                command_dict[command_name] = new_command_content
+                
+                # 將修改後的命令字典寫回json檔案
+                __json__.set_commands_data(command_dict)
+                    
+                await ita.response.send_message(f'指令 "{command_name}" 新內容: "`{new_command_content}`"')
+            else:
+                await ita.response.send_message(f'指令 "{command_name}" 替代失敗')
+        except Exception as e:
+            await ita.response.send_message(f"指令替代錯誤 {e}")
+            logging.error(f"command_rep {e}")
 
     # 新增的斜線指令
     @app_commands.command(name='commands_list', description='列出所有指令')
     async def commands_list(self, ita:discord.Integration):
-        # 讀取現有的命令
         try:
-            with open(src, 'r', encoding='utf-8') as f:
-                command_dict = json.load(f)
-        except FileNotFoundError:
-            await ita.response.send_message(f'No commands found.')
-            return
-
-        # 將所有的命令連接成一個字串，並在每一個命令後面加上新行符號
-        commands_list = '\n'.join(f'**{name}**: `{content}`' for name, content in command_dict.items())
-        
-        if commands_list:
-            await ita.response.send_message(f'Commands:\n{commands_list}')
-        else:
-            await ita.response.send_message(f'No commands found.')
+            # 讀取現有的命令
+            command_dict = __json__.get_commands_data()
+            # 將所有的命令連接成一個字串，並在每一個命令後面加上新行符號
+            commands_list = '\n'.join(f'!{name}' for name, content in command_dict.items())
+            
+            if commands_list:
+                await ita.response.send_message(f'```指令:\n{commands_list}```')
+            else:
+                await ita.response.send_message(f'No commands found.')
+        except Exception as e:
+            await ita.response.send_message(f"指令列表錯誤 {e}")
+            logging.error(f"command_list {e}")
 
 
 async def setup(bot):

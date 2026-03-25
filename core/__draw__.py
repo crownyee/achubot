@@ -6,7 +6,7 @@ def load_draw_data():
 
     global rec_id, rec_emoji, DRAW_channel, emoji_name
     global FWMC_LUCKY, MID_LUCKY, SMALL_LUCKY, LUCKY, LAST_LUCKY, BAD,PERO_draw
-    global FWMC_LUCKY_ID, MID_LUCKY_ID, SMALL_LUCKY_ID, LUCKY_ID, LAST_LUCKY_ID, BAD_ID
+    global BASE_ID,FWMC_LUCKY_ID, MID_LUCKY_ID, SMALL_LUCKY_ID, LUCKY_ID, LAST_LUCKY_ID, BAD_ID
     global LUCKY_ROLES,LUCKY_ROLES_IDS
     global luck_colors, luck_data,photo
     rec_id = int(jdata['Reaction_msg'])
@@ -26,6 +26,7 @@ def load_draw_data():
     BAD = jdata['BAD']
     
     # 身分組ID
+    BASE_ID = jdata['BASE_ID']
     FWMC_LUCKY_ID = jdata['FWMCLUCKY_ID']
     MID_LUCKY_ID = jdata['MID_LUCKY_ID']
     SMALL_LUCKY_ID = jdata['SMALL_LUCKY_ID']
@@ -62,7 +63,14 @@ def load_draw_data():
         "EN_Advent": "Fuwawa Abyssgard,Mococo Abyssgard,Nerissa Ravencroft,Koseki Bijou,Shiori Novella",
         "ID_1gen": "Ayunda Risu,Moona Hoshinova,Airani Iofifteen",
         "ID_2gen": "Kureiji Ollie,Anya Melfissa,Pavolia Reine",
-        "ID_3gen": "Vestia Zeta,Kaela Kovalskia,Kobo Kanaeru"
+        "ID_3gen": "Vestia Zeta,Kaela Kovalskia,Kobo Kanaeru",
+        "Lupinus Virtual Games": "一ノ瀬うるは,小雀とと,花芽なずな,花芽すみれ",
+        "Iris Black Games": "如月れん,胡桃のあ,橘ひなの",
+        "Cattleya Regina Games": "空澄セナ,兎咲ミミ,英リサ",
+        "Hinemosu": "千燈ゆうひ,紡木こかげ,夜乃くろむ",
+        "Chou Musubi": "甘結もか,蝶屋はなび",
+        "Solo": "白波らむね,紫宮るな,猫汰つな,八雲べに,神成きゅぴ,藍沢エマ,夢野あかり,小森めと",
+        "vspo_en": "Riko Solari,Remia Aotsuki,Jira Jisaki,Narin Mikure,Arya Kuroha"
     }
     #photo 
     photo = {
@@ -77,7 +85,7 @@ def load_draw_data():
         "さくらみこ":"https://holodex.net/statics/channelImg/UC-hM6YJuNYVAmUWxeIr9FeA.png",
         "AZKi":"https://holodex.net/statics/channelImg/UC0TXe_LYZ4scaW2XMyi5_kw.png",
         #JP-1gen
-        "赤井はあと":"https://holodex.net/statics/channelImg/UCp6993wxpyDPHUpavwDFqgg.png",
+        "赤井はあと":"https://holodex.net/statics/channelImg/UC1CfXB_kRs3C-zaeTG3oGyg.png",
         "夜空メル":"https://holodex.net/statics/channelImg/UCD8HOxPs4Xvsm8H0ZxXGiBw.png",
         "白上フブキ":"https://holodex.net/statics/channelImg/UCdn5BQ06XqgXoAxIhbqw5Rg.png",
         "アキ・ローゼンター":"https://holodex.net/statics/channelImg/UCFTLzh12_nrtzqBPsTCqenA.png",
@@ -139,7 +147,7 @@ def load_draw_data():
         "Nanashi Mumei":"https://holodex.net/statics/channelImg/UC3n5uGu18FoCy23ggWWp8tA.png",
         "Hakos Baelz":"https://holodex.net/statics/channelImg/UCgmPnx-EEeOrZSg5Tiw7ZRQ.png",
         "Ouro Kronii":"https://holodex.net/statics/channelImg/UCmbs8T6MWqUHP1tIQvSgKrg.png",
-        "Ceres Fauna":"https://holodex.net/statics/channelImg/UCmbs8T6MWqUHP1tIQvSgKrg.png",
+        "Ceres Fauna":"https://holodex.net/statics/channelImg/UCO_aKKYxn4tvrqPjcTzZ6EQ.png",
         "Tsukumo Sana":"https://holodex.net/statics/channelImg/UCsUj0dszADCGbF3gNrQEuSQ.png",
         #EN-3gen
         "Koseki Bijou":"https://holodex.net/statics/channelImg/UC9p_lqQ0FEDz327Vgf5JwqA.png",
@@ -163,5 +171,40 @@ def load_draw_data():
         "Kobo Kanaeru":"https://holodex.net/statics/channelImg/UCjLEmnpCNeisMxy134KPwWw.png",
         "Vestia Zeta":"https://holodex.net/statics/channelImg/UCTvHWSfBZgtxE4sILOaurIQ.png",
         "Kaela Kovalskia":"https://holodex.net/statics/channelImg/UCZLZ8Jjx_RN2CXloOmgTHVg.png",
+        #Lupinus Virtual Games
+        "一ノ瀬うるは": "https://holodex.net/statics/channelImg/UC5LyYg6cCA4yHEYvtUsir3g.png",
+        "小雀とと": "https://holodex.net/statics/channelImg/UCgTzsBI0DIRopMylJEDqnog.png",
+        "花芽なずな": "https://holodex.net/statics/channelImg/UCiMG6VdScBabPhJ1ZtaVmbw.png",
+        "花芽すみれ": "https://holodex.net/statics/channelImg/UCyLGcqYs7RsBb3L0SJfzGYA.png",
+        #Iris Black Games
+        "如月れん": "https://holodex.net/statics/channelImg/UCGWa1dMU_sDCaRQjdabsVgg.png",
+        "胡桃のあ": "https://holodex.net/statics/channelImg/UCIcAj6WkJ8vZ7DeJVgmeqKw.png",
+        "橘ひなの": "https://holodex.net/statics/channelImg/UCvUc0m317LWTTPZoBQV479A.png",
+        #Cattleya Regina Games
+        "空澄セナ": "https://holodex.net/statics/channelImg/UCF_U2GCKHvDz52jWdizppIA.png",
+        "兎咲ミミ": "https://holodex.net/statics/channelImg/UCnvVG9RbOW3J6Ifqo-zKLiw.png",
+        "英リサ": "https://holodex.net/statics/channelImg/UCurEA8YoqFwimJcAuSHU0MQ.png", 
+        #Hinemosu
+        "千燈ゆうひ": "https://holodex.net/statics/channelImg/UCuDY3ibSP2MFRgf7eo3cojg.png",
+        "紡木こかげ": "https://holodex.net/statics/channelImg/UC-WX1CXssCtCtc2TNIRnJzg.png",
+        "夜乃くろむ": "https://holodex.net/statics/channelImg/UCX4WL24YEOUYd7qDsFSLDOw.png",
+        #Chou Musubi 
+        "甘結もか": "https://holodex.net/statics/channelImg/UC8vKBjGY2HVfbW9GAmgikWw.png",
+        "蝶屋はなび": "https://holodex.net/statics/channelImg/UCL9hJsdk9eQa0IlWbFB2oRg.png",
+        #Solo
+        "白波らむね": "https://holodex.net/statics/channelImg/UC61OwuYOVuKkpKnid-43Twg.png",
+        "紫宮るな": "https://holodex.net/statics/channelImg/UCD5W21JqNMv_tV9nfjvF9sw.png",
+        "猫汰つな": "https://holodex.net/statics/channelImg/UCIjdfjcSaEgdjwbgjxC3ZWg.png",
+        "八雲べに": "https://holodex.net/statics/channelImg/UCjXBuHmWkieBApgBhDuJMMQ.png",
+        "神成きゅぴ": "https://holodex.net/statics/channelImg/UCMp55EbT_ZlqiMS3lCj01BQ.png",
+        "藍沢エマ": "https://holodex.net/statics/channelImg/UCPkKpOHxEDcwmUAnRpIu-Ng.png",
+        "夢野あかり": "https://holodex.net/statics/channelImg/UCS5l_Y0oMVTjEos2LuyeSZQ.png",
+        "小森めと": "https://holodex.net/statics/channelImg/UCzUNASdzI4PV5SlqtYwAkKQ.png",
+        #Vspo_EN
+        #"Riko Solari":"https://holodex.net/statics/channelImg/UC7Xglp1fske9zmRe7Oj8YyA.png",
+        #"Remia Aotsuki":"https://holodex.net/statics/channelImg/UCCra1t-eIlO3ULyXQQMD9Xw.png",
+        #"Jira Jisaki":"https://holodex.net/statics/channelImg/UCeCWj-SiJG9SWN6wGORiLmw.png",
+        #"Narin Mikure":"https://holodex.net/statics/channelImg/UCKSpM183c85d5V2cW5qaUjA.png",
+        #"Arya Kuroha":"https://holodex.net/statics/channelImg/UCLlJpxXt6L5d-XQ0cDdIyDQ.png",
     }
 load_draw_data()

@@ -3,9 +3,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands,tasks
 import json,asyncio
+
 #import TOOLS.bus_d as bus_run
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
+from core import __json__
+jdata = __json__.load_json('./json/setting.json')
 
 # Discord機器人令牌
 TOKEN = jdata['MTOKEN']
@@ -33,24 +34,13 @@ async def frt(ctx):
     except discord.errors.NotFound:
         pass
     
-#重新加載bus資料夾的程式
-@bot.command()
-async def reload_bus(ctx):
-    try:
-        for filename in os.listdir("./bus"):
-            if filename.endswith(".py"):
-                module_name = f"bus.{filename[:-3]}"
-                await bot.reload_extension(module_name)
-        await ctx.send("已成功重新載入 `bus` 資料夾中的程式")
-    except discord.errors.NotFound:
-        pass
 
 #Load
 async def loadExtensions():
     folders = [
         'cmds',
         'game',
-        'holo',
+        'streams',
         'data'
     ]
     for folder in folders:
@@ -66,6 +56,27 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+
+'''
+公車
+#重新加載bus資料夾的程式
+@bot.command()
+async def reload_bus(ctx):
+    try:
+        for filename in os.listdir("./bus"):
+            if filename.endswith(".py"):
+                module_name = f"bus.{filename[:-3]}"
+                await bot.reload_extension(module_name)
+        await ctx.send("已成功重新載入 `bus` 資料夾中的程式")
+    except discord.errors.NotFound:
+        pass
+
+async def main():
+    async with bot:
+        await loadExtensions()
+        asyncio.create_task(bus_run.run_data_fetch())
+        await bot.start(TOKEN)
+'''
 
 
 '''

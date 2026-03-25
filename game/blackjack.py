@@ -1,18 +1,24 @@
+#Discord
 import discord
 from discord import app_commands
 from discord.ext import commands
-import random,asyncio, json
+
+#Core
 from core.__init__ import Cog_Extension
+import core.__draw__ as draw_data
+
+#Tools
+import random,asyncio, json
 import random,logging,datetime
 import motor.motor_asyncio
-import core.__draw__ as draw_data
+
 
 logging.basicConfig(filename='./json/error_log.txt', level=logging.ERROR)
 
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
+from core import __json__
+jdata = __json__.get_setting_data()
 uri = jdata['MongoAPI']
+
 class game():
     def __init__(self):
         self.deck = []

@@ -1,14 +1,18 @@
-import logging
-
+#Discord
 import discord
 from discord import app_commands
 from discord.ext import commands
+
+#Core
 from core.__init__ import Cog_Extension
-import asyncio
-from datetime import datetime
 import core.__draw__ as draw_data
 from core.__whitelist__ import mywhite
 from core.__mogo__ import my_mongodb
+
+#Tools
+import logging
+import asyncio
+from datetime import datetime
 
 logging.basicConfig(filename='./json/error_log.txt', level=logging.ERROR)
 
@@ -58,6 +62,7 @@ class MyDATA(Cog_Extension):
     #顯示個人資訊
     @app_commands.command(name='information', description="個人資訊")
     async def information(self, ita: discord.Interaction):
+        await ita.response.defer()
         infodata = await self.collection.find_one({"_id": ita.user.id})
         await self.collection.update_one({"_id": ita.user.id}, {"$set": {"user_name":ita.user.display_name}})
         await self.collection.update_one({"_id": ita.user.id},{"$set": {"user_photo": str(ita.user.display_avatar)}})
@@ -88,11 +93,10 @@ class MyDATA(Cog_Extension):
                             value=infodata['money'],  
                             inline=True)
             embed.set_thumbnail(url=f"{str(ita.user.display_avatar)}")
-            await ita.response.send_message(embed=embed,ephemeral=True)
+            await ita.followup.send(embed=embed,ephemeral=True)
         except Exception as e:
             logging.error(f"mongo.py  information: {e}")
-            await ita.response.send_message("資料發生錯誤 請通知管理員")
-
+            await ita.followup.send("資料發生錯誤 請通知管理員", ephemeral=True)
     #手動
     @app_commands.command(name='init',description="初始化資料(admin only)")
     @app_commands.check(mywhite.iswhitelist)  
@@ -102,7 +106,7 @@ class MyDATA(Cog_Extension):
             await self.collection.update_many({},{"$set":{"sign_in": 0}})
             await self.collection.update_many({},{"$set":{"draw_in": 0}})
 
-            await ita.edit_original_response(content=f'成功!')
+            await ita.followup.send(content=f'成功!')
         except Exception as e:
             logging.error(f"mongo.py  init: {e}")
     

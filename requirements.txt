@@ -8,3 +8,5 @@ pytchat
 emoji
 pymongo
 motor
+aiohttp
+asyncio

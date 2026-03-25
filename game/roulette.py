@@ -1,13 +1,18 @@
-import discord,logging
+#Discord
+import discord
 from discord import app_commands
-import random,asyncio,json
-import motor.motor_asyncio
+
+#Core
 from core.__init__ import Cog_Extension
+from core import __json__
+
+#Tools
+import random,asyncio
+import motor.motor_asyncio
+import logging
+
 logging.basicConfig(filename='./json/error_log.txt', level=logging.ERROR)
-
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
+jdata = __json__.get_setting_data()
 uri = jdata['MongoAPI']
 
 

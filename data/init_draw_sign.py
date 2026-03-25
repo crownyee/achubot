@@ -1,11 +1,11 @@
 import discord
 from core.__init__ import Cog_Extension
+from core import __json__
+
 import asyncio, json
 import motor.motor_asyncio
 from datetime import datetime, timedelta
-
-with open('./json/setting.json','r',encoding='utf8') as jfile:
-    jdata = json.load(jfile)
+jdata = __json__.get_setting_data()
 
 uri = jdata['MongoAPI']
 
@@ -18,7 +18,7 @@ class init_test(Cog_Extension):
             await self.bot.wait_until_ready()
 
             while not self.bot.is_closed():
-                #time_f = datetime.now() - timedelta(hours=16)
+                #time_f = datetime.now() - timedelta(hours=12)
                 now = datetime.now()
                 now = now.strftime('%H%M')
                 if now == '0000':
